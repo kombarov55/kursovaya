@@ -10,18 +10,18 @@
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.ItemDumpVM')">
         <vbox>
             <hbox width="100%">
-                <combobox placeholder="Наименование.." width="100%" model="@load(vm.names)" onChange="@command('applyFilter')"/>
-                <combobox placeholder="Категория.." width="100%" model="@load(vm.categories)" onChange="@command('applyFilter')" />
-                <combobox placeholder="Продавец.." width="100%" model="@load(vm.shops)" onChange="@command('applyFilter')" />
+                <combobox placeholder="Наименование.." selectedItem="@bind(vm.selectedName)" model="@load(vm.names)" onChange="@command('notifyItemsAboutFilter')"/>
+                <combobox placeholder="Категория.." width="100%" selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
+                <combobox placeholder="Продавец.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox>
-                <combobox placeholder="Цена от.." width="80%" onChange="@command('applyFilter')" />
-                <combobox placeholder="Цена до.." width="80%" onChange="@command('applyFilter')" />
-                <datebox placeholder="Дата от.." onChange="@command('applyFilter')" />
-                <datebox placeholder="Дата до.." onChange="@command('applyFilter')" />
+                <combobox placeholder="Цена от.." width="80%" onChange="@command('notifyItemsAboutFilter')" />
+                <combobox placeholder="Цена до.." width="80%" onChange="@command('notifyItemsAboutFilter')" />
+                <datebox placeholder="Дата от.." onChange="@command('notifyItemsAboutFilter')" />
+                <datebox placeholder="Дата до.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
         </vbox>
-        <listbox model="@load(vm.items)" sclass="scrollable">
+        <listbox model="@bind(vm.items)" sclass="scrollable">
             <listhead>
                 <listheader hflex="10" label="Наименование" />
                 <listheader hflex="10" label="Категория" />

@@ -8,11 +8,11 @@ import model.dto.Category;
 import model.dto.Item;
 import model.dto.Shop;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ public class ItemDumpVM {
     List<Shop> shops;
     List<Category> categories;
 
-    String selectedName;
+    String selectedName = "";
     Category selectedCategory;
     Shop selectedShop;
     int beginPrice = 0;
@@ -38,14 +38,15 @@ public class ItemDumpVM {
     Date endDate = new Date();
 
 
-    List<Predicate<Item>> predicates = new ArrayList<>();
+    List<Predicate<Item>> appliedFilters = new ArrayList<>();
     {
-        predicates.add(item -> selectedName != null || !selectedName.isEmpty() || item.getName().equals(selectedName));
-        predicates.add(item -> selectedCategory != null || item.getCategory().getName().equals(selectedCategory.getName()));
-        predicates.add(item -> selectedShop != null || item.getSeller().getName().equals(selectedShop.getName()));
-        predicates.add(item -> item.getPrice() > beginPrice && item.getPrice() < endPrice);
-        predicates.add(item ->  item.getPurchaseDate().getTime() > beginDate.getTime() & item.getPurchaseDate().getTime() < endDate.getTime());
+        appliedFilters.add(item -> selectedName == null || selectedName.isEmpty() || item.getName().equalsIgnoreCase(selectedName));
+        appliedFilters.add(item -> selectedCategory == null || selectedCategory == null || selectedCategory.getName().equalsIgnoreCase(item.getCategory().getName()));
+        appliedFilters.add(item -> selectedShop == null || selectedShop.getName().equalsIgnoreCase(item.getSeller().getName()));
     }
+
+
+
 
     public ItemDumpVM() {
         //TODO: тут нужно управлять транзакцией
@@ -55,23 +56,9 @@ public class ItemDumpVM {
     }
 
 
-    @Command
-    public void applyFilter() {
-        items = items.stream()
-                .filter(predicates.get(0))
-                .collect(Collectors.toList());
+    @Command @NotifyChange("items")
+    public void notifyItemsAboutFilter() {
     }
-
-    public static void main(String[] args) {
-        ItemDumpVM vm = new ItemDumpVM();
-        List<Item> unfiltered = vm.getItems();
-        System.out.println(unfiltered);
-        vm.selectedName = "НеКуртка";
-        vm.applyFilter();
-        List<Item> filtered = vm.getItems();
-        System.out.println(filtered);
-    }
-
 
     public List<String> getNames() {
         return items.stream()
@@ -81,8 +68,25 @@ public class ItemDumpVM {
     }
 
     public List<Item> getItems() {
-        return items;
+        return items.stream()
+                .filter(getANDPredicate())
+                .collect(Collectors.toList());
     }
+
+    private Predicate<Item> getANDPredicate() {
+        Predicate<Item> ret = p -> true;
+        for (Predicate<Item> elem : appliedFilters)
+            ret = ret.and(elem);
+        return ret;
+    }
+
+    private Predicate<Item> getORPredicate() {
+        Predicate<Item> ret = p -> true;
+        for (Predicate<Item> elem : appliedFilters)
+            ret = ret.or(elem);
+        return ret;
+    }
+
 
     public List<Shop> getShops() {
         return shops;
@@ -90,6 +94,34 @@ public class ItemDumpVM {
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public String getSelectedName() {
+        return selectedName;
+    }
+
+    public Category getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public Shop getSelectedShop() {
+        return selectedShop;
+    }
+
+    public int getBeginPrice() {
+        return beginPrice;
+    }
+
+    public int getEndPrice() {
+        return endPrice;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 
     public void setSelectedName(String selectedName) {

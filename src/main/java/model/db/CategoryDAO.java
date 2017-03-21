@@ -20,7 +20,10 @@ public class CategoryDAO {
 
     {
         Category category = new Category("Верхняя одежда");
+        Category category2 = new Category("Что то другое");
+
         db.add(category);
+        db.add(category2);
     }
 
     public List<Category> getAll() {

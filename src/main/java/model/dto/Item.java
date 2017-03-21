@@ -73,4 +73,14 @@ public class Item {
     public Date getPurchaseDate() {
         return purchaseDate;
     }
+
+    @Override public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                ", category=" + category +
+                ", seller=" + seller +
+                ", price=" + price +
+                ", purchaseDate=" + purchaseDate +
+                '}';
+    }
 }
