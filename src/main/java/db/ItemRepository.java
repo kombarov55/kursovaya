@@ -1,7 +1,7 @@
 package db;
 
-import model.Item;
-import model.Shop;
+import model.dto.Item;
+import model.dto.Shop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,6 @@ public class ItemRepository {
 
     public List<Item> getAll() {
         List<Item> ret = new ArrayList<>();
-//        ret.add(new Item("Куртка", ));
         return ret;
     }
 

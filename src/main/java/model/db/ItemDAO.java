@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * Created by nikolaykombarov on 21.03.17.
  */
-public class ItemRepository {
+public class ItemDAO {
 
-    private static ItemRepository instance = new ItemRepository();
-    private ItemRepository() {}
-    public static ItemRepository getInstance() {
+    private ItemDAO() {}
+    private static ItemDAO instance = new ItemDAO();
+    public static ItemDAO getInstance() {
         return instance;
     }
 
@@ -24,7 +24,12 @@ public class ItemRepository {
     {
         Shop shop = new Shop("Pal Zelyeri");
         Category category = new Category("Верхняя одежда");
-        items.add(new Item("Куртка", category, shop, 1488, new Date()));
+        Item item = new Item("Куртка", category, shop, 1488, new Date());
+        Item item2 = new Item("Не Куртка", category, shop, 1488, new Date());
+        for (int i = 0; i < 25; i++) {
+            items.add(item);
+        }
+        items.add(item2);
     }
 
     public List<Item> getAll() {

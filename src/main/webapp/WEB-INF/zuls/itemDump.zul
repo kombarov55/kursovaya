@@ -1,19 +1,27 @@
 <zk>
+    <style>
+
+        //TODO: не скролится
+        .scrollable {
+        overflow: scroll;
+        border: 1px solid red;
+        }
+    </style>
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.ItemDumpVM')">
         <vbox>
             <hbox width="100%">
-                <combobox placeholder="Наименование.." width="100%" />
-                <combobox placeholder="Категория.." width="100%" />
-                <combobox placeholder="Продавец.." width="100%" />
+                <combobox placeholder="Наименование.." width="100%" model="@load(vm.names)" onChange="@command('applyFilter')"/>
+                <combobox placeholder="Категория.." width="100%" model="@load(vm.categories)" onChange="@command('applyFilter')" />
+                <combobox placeholder="Продавец.." width="100%" model="@load(vm.shops)" onChange="@command('applyFilter')" />
             </hbox>
             <hbox>
-                <combobox placeholder="Цена от" width="80%" />
-                <combobox placeholder="Цена до" width="80%" />
-                <datebox placeholder="Дата от" />
-                <datebox placeholder="Дата до" />
+                <combobox placeholder="Цена от.." width="80%" onChange="@command('applyFilter')" />
+                <combobox placeholder="Цена до.." width="80%" onChange="@command('applyFilter')" />
+                <datebox placeholder="Дата от.." onChange="@command('applyFilter')" />
+                <datebox placeholder="Дата до.." onChange="@command('applyFilter')" />
             </hbox>
         </vbox>
-        <listbox>
+        <listbox model="@load(vm.items)" sclass="scrollable">
             <listhead>
                 <listheader hflex="10" label="Наименование" />
                 <listheader hflex="10" label="Категория" />
@@ -21,41 +29,16 @@
                 <listheader hflex="10" label="Цена" />
                 <listheader hflex="10" label="Дата покупки" />
             </listhead>
-            <listitem>
-                <listcell label="Куртка" />
-                <listcell label="Верхняя одежда" />
-                <listcell label="Pal' Zeliery" />
-                <listcell label="1500" />
-                <listcell label="15.03.2011" />
-            </listitem>
-            <listitem>
-                <listcell label="Куртка" />
-                <listcell label="Верхняя одежда" />
-                <listcell label="Pal' Zeliery" />
-                <listcell label="1500" />
-                <listcell label="15.03.2011" />
-            </listitem>
-            <listitem>
-                <listcell label="Куртка" />
-                <listcell label="Верхняя одежда" />
-                <listcell label="Pal' Zeliery" />
-                <listcell label="1500" />
-                <listcell label="15.03.2011" />
-            </listitem>
-            <listitem>
-                <listcell label="Куртка" />
-                <listcell label="Верхняя одежда" />
-                <listcell label="Pal' Zeliery" />
-                <listcell label="1500" />
-                <listcell label="15.03.2011" />
-            </listitem>
-            <listitem>
-                <listcell label="Куртка" />
-                <listcell label="Верхняя одежда" />
-                <listcell label="Pal' Zeliery" />
-                <listcell label="1500" />
-                <listcell label="15.03.2011" />
-            </listitem>
+            <template name="model" var="item">
+                <listitem>
+                    <listcell label="@load(item.name)" />
+                    <listcell label="@load(item.category.name)" />
+                    <listcell label="@load(item.seller.name)" />
+                    <listcell label="@load(item.price)" />
+                    <listcell label="@load(item.purchaseDate)" />
+                </listitem>
+            </template>
         </listbox>
+
     </window>
 </zk>

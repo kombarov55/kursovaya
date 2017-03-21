@@ -1,17 +1,20 @@
 <zk>
+    <style>
+        .borderless {border: 0}
+        .right-border {border-right: 1px solid black}
+    </style>
     <borderlayout height="100%" width="100%">
-        <north height="15%">
+        <north height="15%" zclass="borderless">
         </north>
         <west width="35%">
             <include src="WEB-INF/zuls/itemDump.zul" />
         </west>
-        <center>
+        <center style="border: 0; margin-left: 1px">
             <borderlayout>
                 <north height="70%" border="normal">
-
                 </north>
                 <south height="30%" border="normal">
-
+                    <include src="WEB-INF/zuls/statystics.zul" />
                 </south>
             </borderlayout>
         </center>

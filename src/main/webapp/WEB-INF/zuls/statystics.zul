@@ -1,0 +1,7 @@
+<zk>
+    <window>
+        <hbox style="margin: 25px">
+            <label value="Денег потрачено: 12345" />
+        </hbox>
+    </window>
+</zk>
