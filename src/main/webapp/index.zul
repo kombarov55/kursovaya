@@ -1,0 +1,19 @@
+<zk>
+    <borderlayout height="100%" width="100%">
+        <north height="15%">
+        </north>
+        <west width="35%">
+            <include src="WEB-INF/zuls/itemDump.zul" />
+        </west>
+        <center>
+            <borderlayout>
+                <north height="70%" border="normal">
+
+                </north>
+                <south height="30%" border="normal">
+
+                </south>
+            </borderlayout>
+        </center>
+    </borderlayout>
+</zk>

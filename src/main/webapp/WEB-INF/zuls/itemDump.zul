@@ -1,0 +1,61 @@
+<zk>
+    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.ItemDumpVM')">
+        <vbox>
+            <hbox width="100%">
+                <combobox placeholder="Наименование.." width="100%" />
+                <combobox placeholder="Категория.." width="100%" />
+                <combobox placeholder="Продавец.." width="100%" />
+            </hbox>
+            <hbox>
+                <combobox placeholder="Цена от" width="80%" />
+                <combobox placeholder="Цена до" width="80%" />
+                <datebox placeholder="Дата от" />
+                <datebox placeholder="Дата до" />
+            </hbox>
+        </vbox>
+        <listbox>
+            <listhead>
+                <listheader hflex="10" label="Наименование" />
+                <listheader hflex="10" label="Категория" />
+                <listheader hflex="10" label="Продавец" />
+                <listheader hflex="10" label="Цена" />
+                <listheader hflex="10" label="Дата покупки" />
+            </listhead>
+            <listitem>
+                <listcell label="Куртка" />
+                <listcell label="Верхняя одежда" />
+                <listcell label="Pal' Zeliery" />
+                <listcell label="1500" />
+                <listcell label="15.03.2011" />
+            </listitem>
+            <listitem>
+                <listcell label="Куртка" />
+                <listcell label="Верхняя одежда" />
+                <listcell label="Pal' Zeliery" />
+                <listcell label="1500" />
+                <listcell label="15.03.2011" />
+            </listitem>
+            <listitem>
+                <listcell label="Куртка" />
+                <listcell label="Верхняя одежда" />
+                <listcell label="Pal' Zeliery" />
+                <listcell label="1500" />
+                <listcell label="15.03.2011" />
+            </listitem>
+            <listitem>
+                <listcell label="Куртка" />
+                <listcell label="Верхняя одежда" />
+                <listcell label="Pal' Zeliery" />
+                <listcell label="1500" />
+                <listcell label="15.03.2011" />
+            </listitem>
+            <listitem>
+                <listcell label="Куртка" />
+                <listcell label="Верхняя одежда" />
+                <listcell label="Pal' Zeliery" />
+                <listcell label="1500" />
+                <listcell label="15.03.2011" />
+            </listitem>
+        </listbox>
+    </window>
+</zk>
