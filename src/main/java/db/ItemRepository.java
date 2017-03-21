@@ -2,8 +2,6 @@ package db;
 
 import model.Item;
 import model.Shop;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.List;
 /**
  * Created by nikolaykombarov on 21.03.17.
  */
-@Repository
 public class ItemRepository {
 
     Shop shop = new Shop("Pal Zelyeri");
