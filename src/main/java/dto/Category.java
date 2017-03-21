@@ -1,4 +1,4 @@
-package model.dto;
+package dto;
 
 /**
  * Created by nikolaykombarov on 21.03.17.

@@ -1,12 +1,12 @@
 package web.viewmodel;
 
 
-import model.db.CategoryDAO;
-import model.db.ItemDAO;
-import model.db.ShopDAO;
-import model.dto.Category;
-import model.dto.Item;
-import model.dto.Shop;
+import db.CategoryDAO;
+import db.ItemDAO;
+import db.ShopDAO;
+import dto.Category;
+import dto.Item;
+import dto.Shop;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 
@@ -38,11 +38,11 @@ public class ItemDumpVM {
     Date endDate = new Date();
 
 
-    List<Predicate<Item>> appliedFilters = new ArrayList<>();
+    List<Predicate<Item>> itemPredicates = new ArrayList<>();
     {
-        appliedFilters.add(item -> selectedName == null || selectedName.isEmpty() || item.getName().equalsIgnoreCase(selectedName));
-        appliedFilters.add(item -> selectedCategory == null || selectedCategory == null || selectedCategory.getName().equalsIgnoreCase(item.getCategory().getName()));
-        appliedFilters.add(item -> selectedShop == null || selectedShop.getName().equalsIgnoreCase(item.getSeller().getName()));
+        itemPredicates.add(item -> selectedName == null || selectedName.isEmpty() || item.getName().equalsIgnoreCase(selectedName));
+        itemPredicates.add(item -> selectedCategory == null || selectedCategory == null || selectedCategory.getName().equalsIgnoreCase(item.getCategory().getName()));
+        itemPredicates.add(item -> selectedShop == null || selectedShop.getName().equalsIgnoreCase(item.getSeller().getName()));
     }
 
 
@@ -69,24 +69,17 @@ public class ItemDumpVM {
 
     public List<Item> getItems() {
         return items.stream()
-                .filter(getANDPredicate())
+                .filter(getANDPredicate(itemPredicates))
                 .collect(Collectors.toList());
     }
 
-    private Predicate<Item> getANDPredicate() {
+    private Predicate<Item> getANDPredicate(List<Predicate<Item>> predicates) {
+        //TODO: тут можно использовать stream().reduce(..)
         Predicate<Item> ret = p -> true;
-        for (Predicate<Item> elem : appliedFilters)
+        for (Predicate<Item> elem : predicates)
             ret = ret.and(elem);
         return ret;
     }
-
-    private Predicate<Item> getORPredicate() {
-        Predicate<Item> ret = p -> true;
-        for (Predicate<Item> elem : appliedFilters)
-            ret = ret.or(elem);
-        return ret;
-    }
-
 
     public List<Shop> getShops() {
         return shops;

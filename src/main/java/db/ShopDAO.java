@@ -1,6 +1,6 @@
-package model.db;
+package db;
 
-import model.dto.Shop;
+import dto.Shop;
 
 import java.util.ArrayList;
 import java.util.List;

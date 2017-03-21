@@ -1,8 +1,8 @@
-package model.db;
+package db;
 
-import model.dto.Category;
-import model.dto.Item;
-import model.dto.Shop;
+import dto.Category;
+import dto.Item;
+import dto.Shop;
 
 import java.util.ArrayList;
 import java.util.Date;
