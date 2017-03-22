@@ -1,18 +1,11 @@
 <zk>
-    <style>
-
-        //TODO: не скролится
-        .scrollable {
-        overflow: scroll;
-        border: 1px solid red;
-        }
-    </style>
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.ItemDumpVM')">
+
         <vbox>
             <hbox width="100%">
                 <combobox placeholder="Наименование.." selectedItem="@bind(vm.selectedName)" model="@load(vm.names)" onChange="@command('notifyItemsAboutFilter')"/>
                 <combobox placeholder="Категория.." width="100%" selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
-                <combobox placeholder="Продавец.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
+                <combobox placeholder="Производитель.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox>
                 <combobox placeholder="Цена от.." width="80%" onChange="@command('notifyItemsAboutFilter')" />
@@ -21,11 +14,12 @@
                 <datebox placeholder="Дата до.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
         </vbox>
+
         <listbox model="@bind(vm.items)" sclass="scrollable">
             <listhead>
                 <listheader hflex="10" label="Наименование" />
                 <listheader hflex="10" label="Категория" />
-                <listheader hflex="10" label="Продавец" />
+                <listheader hflex="11" label="Производитель" />
                 <listheader hflex="10" label="Цена" />
                 <listheader hflex="10" label="Дата покупки" />
             </listhead>

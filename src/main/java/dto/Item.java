@@ -1,17 +1,29 @@
 package dto;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.util.Date;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.AUTO;
 
 /**
  * Created by nikolaykombarov on 21.03.17.
  */
-
+@Entity
 public class Item {
 
+    @Id @GeneratedValue(strategy = AUTO)
     long id;
     String name;
-    Category category;
-    Shop seller;
+
+    @ManyToOne(cascade = ALL) Category category;
+    @ManyToOne(cascade = ALL) Shop seller;
     int price;
     Date purchaseDate;
 
@@ -74,13 +86,4 @@ public class Item {
         return purchaseDate;
     }
 
-    @Override public String toString() {
-        return "Item{" +
-                "name='" + name + '\'' +
-                ", category=" + category +
-                ", seller=" + seller +
-                ", price=" + price +
-                ", purchaseDate=" + purchaseDate +
-                '}';
-    }
 }

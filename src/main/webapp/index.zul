@@ -6,7 +6,7 @@
     <borderlayout height="100%" width="100%">
         <north height="15%" zclass="borderless">
         </north>
-        <west width="35%">
+        <west width="35%" autoscroll="true">
             <include src="WEB-INF/zuls/itemDump.zul" />
         </west>
         <center style="border: 0; margin-left: 1px">

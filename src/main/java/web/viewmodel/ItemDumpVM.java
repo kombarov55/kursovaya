@@ -1,18 +1,14 @@
 package web.viewmodel;
 
 
-import db.CategoryDAO;
 import db.ItemDAO;
-import db.ShopDAO;
 import dto.Category;
 import dto.Item;
 import dto.Shop;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -22,37 +18,43 @@ import java.util.stream.Collectors;
 public class ItemDumpVM {
 
     ItemDAO itemDao = ItemDAO.getInstance();
-    ShopDAO shopDao = ShopDAO.getInstance();
-    CategoryDAO categoryDao = CategoryDAO.getInstance();
 
     List<Item> items;
-    List<Shop> shops;
-    List<Category> categories;
+    Set<String> names = new HashSet<>();
+    Set<Shop> shops = new HashSet<>();
+    Set<Category> categories = new HashSet<>();
 
-    String selectedName = "";
+    String selectedName;
     Category selectedCategory;
     Shop selectedShop;
-    int beginPrice = 0;
-    int endPrice = Integer.MAX_VALUE;
-    Date beginDate = new Date(1);
-    Date endDate = new Date();
+    int beginPrice;
+    int endPrice;
+    Date beginDate;
+    Date endDate;
 
 
-    List<Predicate<Item>> itemPredicates = new ArrayList<>();
+    Predicate<Item> itemPredicate = item -> true;
+
     {
-        itemPredicates.add(item -> selectedName == null || selectedName.isEmpty() || item.getName().equalsIgnoreCase(selectedName));
-        itemPredicates.add(item -> selectedCategory == null || selectedCategory == null || selectedCategory.getName().equalsIgnoreCase(item.getCategory().getName()));
-        itemPredicates.add(item -> selectedShop == null || selectedShop.getName().equalsIgnoreCase(item.getSeller().getName()));
+        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getName(), selectedName));
+        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getCategory(), selectedCategory));
+        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getSeller(), selectedShop));
+
+    }
+
+    private boolean eqOrIsNull(Object expected, Object str) {
+        return str == null || str.equals(expected);
     }
 
 
-
-
     public ItemDumpVM() {
-        //TODO: тут нужно управлять транзакцией
         items = itemDao.getAll();
-        shops = shopDao.getAll();
-        categories = categoryDao.getAll();
+
+        for (Item each : items) {
+            names.add(each.getName());
+            shops.add(each.getSeller());
+            categories.add(each.getCategory());
+        }
     }
 
 
@@ -69,23 +71,15 @@ public class ItemDumpVM {
 
     public List<Item> getItems() {
         return items.stream()
-                .filter(getANDPredicate(itemPredicates))
+                .filter(itemPredicate)
                 .collect(Collectors.toList());
     }
 
-    private Predicate<Item> getANDPredicate(List<Predicate<Item>> predicates) {
-        //TODO: тут можно использовать stream().reduce(..)
-        Predicate<Item> ret = p -> true;
-        for (Predicate<Item> elem : predicates)
-            ret = ret.and(elem);
-        return ret;
-    }
-
-    public List<Shop> getShops() {
+    public Set<Shop> getShops() {
         return shops;
     }
 
-    public List<Category> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
