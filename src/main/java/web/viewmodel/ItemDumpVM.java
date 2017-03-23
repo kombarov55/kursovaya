@@ -1,23 +1,30 @@
 package web.viewmodel;
 
 
-import db.ItemDAO;
+import db.ItemRepository;
 import dto.Category;
 import dto.Item;
 import dto.Shop;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.select.annotation.VariableResolver;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
  * Created by nikolaykombarov on 21.03.17.
  */
+@VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class ItemDumpVM {
 
-    ItemDAO itemDao = ItemDAO.getInstance();
+    @WireVariable ItemRepository itemRepository;
 
     List<Item> items;
     Set<String> names = new HashSet<>();
@@ -47,8 +54,9 @@ public class ItemDumpVM {
     }
 
 
-    public ItemDumpVM() {
-        items = itemDao.getAll();
+    @AfterCompose
+    public void loadData() {
+        items = itemRepository.getAllItems();
 
         for (Item each : items) {
             names.add(each.getName());
@@ -56,7 +64,6 @@ public class ItemDumpVM {
             categories.add(each.getCategory());
         }
     }
-
 
     @Command @NotifyChange("items")
     public void notifyItemsAboutFilter() {

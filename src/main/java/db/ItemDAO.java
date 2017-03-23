@@ -1,9 +1,8 @@
 package db;
 
 import dto.Item;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -11,24 +10,12 @@ import java.util.List;
  * Created by nikolaykombarov on 21.03.17.
  */
 
-@Repository
-public class ItemDAO {
-
-    private static ItemDAO instance = new ItemDAO();
-    private ItemDAO() {}
-    public static ItemDAO getInstance() {
-        return instance;
-    }
-
-    @Autowired HibernateUtil hibUtil;
+public class ItemDAO extends HibernateDaoSupport {
 
     public List<Item> getAll() {
-        Session session = HibernateUtil.openSession();
-        session.beginTransaction();
-        List<Item> ret = session.createQuery("from Item").list();
-        session.getTransaction().commit();
-        return ret;
+        return getHibernateTemplate().loadAll(Item.class);
     }
+
 
 //    List<Item> items = new ArrayList<>();
 //    List<Category> categories = new ArrayList<>();
