@@ -1,7 +1,7 @@
 <zk>
-    <window>
+    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.StatysticsVM')">
         <hbox style="margin: 25px">
-            <label value="Денег потрачено: 12345" />
+            Денег потрачено: <label value="@bind(vm.totalSpent)" />
         </hbox>
     </window>
 </zk>

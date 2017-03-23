@@ -1,9 +1,12 @@
 package db;
 
+import dto.Category;
 import dto.Item;
+import dto.Shop;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,10 +15,13 @@ import java.util.List;
 
 public class ItemDAO extends HibernateDaoSupport {
 
-    public List<Item> getAll() {
+    @Transactional public List<Item> getAll() {
         return getHibernateTemplate().loadAll(Item.class);
     }
 
+    @Transactional public long getMoneySpentBetween(Date before, Date after) {
+        return (long) getHibernateTemplate().execute(session -> session.createQuery("select sum(i.price) from Item i").list()).get(0);
+    }
 
 //    List<Item> items = new ArrayList<>();
 //    List<Category> categories = new ArrayList<>();

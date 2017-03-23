@@ -1,7 +1,7 @@
 package web.viewmodel;
 
 
-import db.ItemRepository;
+import db.ItemDAO;
 import dto.Category;
 import dto.Item;
 import dto.Shop;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class ItemDumpVM {
 
-    @WireVariable ItemRepository itemRepository;
+    @WireVariable ItemDAO itemDAO;
 
     List<Item> items;
     Set<String> names = new HashSet<>();
@@ -38,8 +38,6 @@ public class ItemDumpVM {
     int endPrice;
     Date beginDate;
     Date endDate;
-
-
     Predicate<Item> itemPredicate = item -> true;
 
     {
@@ -49,20 +47,17 @@ public class ItemDumpVM {
 
     }
 
-    private boolean eqOrIsNull(Object expected, Object str) {
-        return str == null || str.equals(expected);
-    }
-
-
     @AfterCompose
     public void loadData() {
-        items = itemRepository.getAllItems();
+        items = itemDAO.getAll();
 
         for (Item each : items) {
             names.add(each.getName());
             shops.add(each.getSeller());
             categories.add(each.getCategory());
         }
+
+        long moneySpent = itemDAO.getMoneySpentBetween(new Date(), new Date());
     }
 
     @Command @NotifyChange("items")
@@ -82,6 +77,10 @@ public class ItemDumpVM {
                 .collect(Collectors.toList());
     }
 
+    private boolean eqOrIsNull(Object expected, Object str) {
+        return str == null || str.equals(expected);
+    }
+
     public Set<Shop> getShops() {
         return shops;
     }
@@ -94,52 +93,52 @@ public class ItemDumpVM {
         return selectedName;
     }
 
-    public Category getSelectedCategory() {
-        return selectedCategory;
-    }
-
-    public Shop getSelectedShop() {
-        return selectedShop;
-    }
-
-    public int getBeginPrice() {
-        return beginPrice;
-    }
-
-    public int getEndPrice() {
-        return endPrice;
-    }
-
-    public Date getBeginDate() {
-        return beginDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
     public void setSelectedName(String selectedName) {
         this.selectedName = selectedName;
+    }
+
+    public Category getSelectedCategory() {
+        return selectedCategory;
     }
 
     public void setSelectedCategory(Category selectedCategory) {
         this.selectedCategory = selectedCategory;
     }
 
+    public Shop getSelectedShop() {
+        return selectedShop;
+    }
+
     public void setSelectedShop(Shop selectedShop) {
         this.selectedShop = selectedShop;
+    }
+
+    public int getBeginPrice() {
+        return beginPrice;
     }
 
     public void setBeginPrice(int beginPrice) {
         this.beginPrice = beginPrice;
     }
 
+    public int getEndPrice() {
+        return endPrice;
+    }
+
     public void setEndPrice(int endPrice) {
         this.endPrice = endPrice;
     }
 
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
     public void setBeginDate(Date beginDate) {
         this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 
     public void setEndDate(Date endDate) {
