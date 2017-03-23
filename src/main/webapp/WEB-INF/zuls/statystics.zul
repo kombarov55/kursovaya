@@ -1,7 +1,26 @@
 <zk>
-    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.StatysticsVM')">
-        <hbox style="margin: 25px">
-            Денег потрачено: <label value="@bind(vm.totalSpent)" />
-        </hbox>
+    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.StatysticsVM')">
+        <vbox style="margin:10px">
+            <label value="Денег потрачено:" />
+            <vbox style="margin-left: 30px">
+                <hbox>
+                    * За все время: <label value="@load(vm.totalSpent) @converter('formatedNumber', format='###,###,###,###,### $')" />
+                </hbox>
+                <hbox>
+                    * За последний день: <label value="@load(vm.lastDaySpent) @converter('formatedNumber', format='###,###,###,###,### $')" />
+                </hbox>
+                <hbox>
+                    * За последнюю неделю: <label value="@load(vm.lastWeekSpent) @converter('formatedNumber', format='###,###,###,###,### $')" />
+                </hbox>
+                <hbox>
+                    * За последний месяц: <label value="@load(vm.lastMonthSpent) @converter('formatedNumber', format='###,###,###,###,### $')" />
+                </hbox>
+
+                <hbox>
+                    * За последний год: <label value="@load(vm.lastYearSpent) @converter('formatedNumber', format='###,###,###,###,### $')" />
+                </hbox>
+            </vbox>
+        </vbox>
+
     </window>
 </zk>

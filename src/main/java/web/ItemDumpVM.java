@@ -1,4 +1,4 @@
-package web.viewmodel;
+package web;
 
 
 import db.ItemDAO;
@@ -35,16 +35,26 @@ public class ItemDumpVM {
     Category selectedCategory;
     Shop selectedShop;
     int beginPrice;
-    int endPrice;
-    Date beginDate;
-    Date endDate;
+    int endPrice = Integer.MAX_VALUE;
+    Date beginDate = new Date(1);
+    Date endDate = new Date();
     Predicate<Item> itemPredicate = item -> true;
 
     {
         itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getName(), selectedName));
         itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getCategory(), selectedCategory));
         itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getSeller(), selectedShop));
+        itemPredicate = itemPredicate.and(item -> isNumberBetween(item.getPrice(), beginPrice, endPrice));
+        itemPredicate = itemPredicate.and(item -> isNumberBetween(
+                item.getPurchaseDate().getTime(), beginDate.getTime(), endDate.getTime()));
+    }
 
+    private boolean eqOrIsNull(Object expected, Object str) {
+        return str == null || str.equals(expected);
+    }
+
+    private boolean isNumberBetween(long comparee, long begin, long end) {
+        return comparee > begin && comparee < end;
     }
 
     @AfterCompose
@@ -57,7 +67,6 @@ public class ItemDumpVM {
             categories.add(each.getCategory());
         }
 
-        long moneySpent = itemDAO.getMoneySpentBetween(new Date(), new Date());
     }
 
     @Command @NotifyChange("items")
@@ -72,14 +81,11 @@ public class ItemDumpVM {
     }
 
     public List<Item> getItems() {
-        return items.stream()
+         return items.stream()
                 .filter(itemPredicate)
                 .collect(Collectors.toList());
     }
 
-    private boolean eqOrIsNull(Object expected, Object str) {
-        return str == null || str.equals(expected);
-    }
 
     public Set<Shop> getShops() {
         return shops;

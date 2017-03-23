@@ -1,5 +1,5 @@
 <zk>
-    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.viewmodel.ItemDumpVM')">
+    <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.ItemDumpVM')">
 
         <vbox>
             <hbox width="100%">
@@ -8,8 +8,8 @@
                 <combobox placeholder="Производитель.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox>
-                <combobox placeholder="Цена от.." width="80%" onChange="@command('notifyItemsAboutFilter')" />
-                <combobox placeholder="Цена до.." width="80%" onChange="@command('notifyItemsAboutFilter')" />
+                <combobox placeholder="Цена от.." width="80%" onChange="@command('notifyItemsAboutFilter')" selectedItem="@bind(vm.beginPrice)" />
+                <combobox placeholder="Цена до.." width="80%" onChange="@command('notifyItemsAboutFilter')" selectedItem="@bind(vm.endPrice)" />
                 <datebox placeholder="Дата от.." onChange="@command('notifyItemsAboutFilter')" />
                 <datebox placeholder="Дата до.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
@@ -20,7 +20,7 @@
                 <listheader hflex="10" label="Наименование" />
                 <listheader hflex="10" label="Категория" />
                 <listheader hflex="11" label="Производитель" />
-                <listheader hflex="10" label="Цена" />
+                <listheader hflex="10" label="Цена ($)" />
                 <listheader hflex="10" label="Дата покупки" />
             </listhead>
             <template name="model" var="item">
@@ -28,8 +28,8 @@
                     <listcell label="@load(item.name)" />
                     <listcell label="@load(item.category.name)" />
                     <listcell label="@load(item.seller.name)" />
-                    <listcell label="@load(item.price)" />
-                    <listcell label="@load(item.purchaseDate)" />
+                    <listcell label="@load(item.price) @converter('formatedNumber', format='###,### $')" />
+                    <listcell label="@load(item.purchaseDate) @converter('formatedDate', format='dd.MM.yyyy')" />
                 </listitem>
             </template>
         </listbox>
