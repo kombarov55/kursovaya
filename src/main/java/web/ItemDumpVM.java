@@ -45,8 +45,8 @@ public class ItemDumpVM {
         itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getCategory(), selectedCategory));
         itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getSeller(), selectedShop));
         itemPredicate = itemPredicate.and(item -> isNumberBetween(item.getPrice(), beginPrice, endPrice));
-        itemPredicate = itemPredicate.and(item -> isNumberBetween(
-                item.getPurchaseDate().getTime(), beginDate.getTime(), endDate.getTime()));
+        itemPredicate = itemPredicate.and(item -> beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime());
+        itemPredicate = itemPredicate.and(item -> endDate == null || item.getPurchaseDate().getTime() < endDate.getTime());
     }
 
     private boolean eqOrIsNull(Object expected, Object str) {
@@ -81,7 +81,7 @@ public class ItemDumpVM {
     }
 
     public List<Item> getItems() {
-         return items.stream()
+        return items.stream()
                 .filter(itemPredicate)
                 .collect(Collectors.toList());
     }
@@ -132,7 +132,7 @@ public class ItemDumpVM {
     }
 
     public void setEndPrice(int endPrice) {
-        this.endPrice = endPrice;
+        this.endPrice = endPrice == 0 ? Integer.MAX_VALUE : endPrice;
     }
 
     public Date getBeginDate() {
@@ -150,4 +150,5 @@ public class ItemDumpVM {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
 }

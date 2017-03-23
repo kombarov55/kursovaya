@@ -8,10 +8,10 @@
                 <combobox placeholder="Производитель.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox>
-                <combobox placeholder="Цена от.." width="80%" onChange="@command('notifyItemsAboutFilter')" selectedItem="@bind(vm.beginPrice)" />
-                <combobox placeholder="Цена до.." width="80%" onChange="@command('notifyItemsAboutFilter')" selectedItem="@bind(vm.endPrice)" />
-                <datebox placeholder="Дата от.." onChange="@command('notifyItemsAboutFilter')" />
-                <datebox placeholder="Дата до.." onChange="@command('notifyItemsAboutFilter')" />
+                <textbox placeholder="Цена от.." width="80%" value="@bind(vm.beginPrice)" onChange="@command('notifyItemsAboutFilter')" />
+                <textbox placeholder="Цена до.." width="80%" value="@bind(vm.endPrice)" onChange="@command('notifyItemsAboutFilter')" />
+                <datebox placeholder="Дата от.." value="@bind(vm.beginDate)" onChange="@command('notifyItemsAboutFilter')"  />
+                <datebox placeholder="Дата до.." value="@bind(vm.endDate)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
         </vbox>
 
