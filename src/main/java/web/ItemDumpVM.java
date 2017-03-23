@@ -38,16 +38,14 @@ public class ItemDumpVM {
     int endPrice = Integer.MAX_VALUE;
     Date beginDate = new Date(1);
     Date endDate = new Date();
-    Predicate<Item> itemPredicate = item -> true;
 
-    {
-        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getName(), selectedName));
-        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getCategory(), selectedCategory));
-        itemPredicate = itemPredicate.and(item -> eqOrIsNull(item.getSeller(), selectedShop));
-        itemPredicate = itemPredicate.and(item -> isNumberBetween(item.getPrice(), beginPrice, endPrice));
-        itemPredicate = itemPredicate.and(item -> beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime());
-        itemPredicate = itemPredicate.and(item -> endDate == null || item.getPurchaseDate().getTime() < endDate.getTime());
-    }
+    Predicate<Item> itemPredicate = item ->
+            eqOrIsNull(item.getName(), selectedName) &&
+                    eqOrIsNull(item.getCategory(), selectedCategory) &&
+                    eqOrIsNull(item.getSeller(), selectedShop) &&
+                    isNumberBetween(item.getPrice(), beginPrice, endPrice) &&
+                    (beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime()) &&
+                    (endDate == null || item.getPurchaseDate().getTime() < endDate.getTime());
 
     private boolean eqOrIsNull(Object expected, Object str) {
         return str == null || str.equals(expected);
