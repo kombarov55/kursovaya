@@ -5,10 +5,10 @@ import dto.Item;
 import dto.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import util.RandomElement;
 import util.TimeGetter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +37,7 @@ public class DataInitializer {
     }
 
     private Item generateItem() {
-        CategoryEnumeration enumElement = new RandomElement(CategoryEnumeration.values()).get();
+        CategoryEnumeration enumElement = CategoryEnumeration.getPseudoRandomElement();
         Category category = enumElement.category;
         Shop shop = enumElement.getRandomShop();
         return new Item(category, shop, generatePrice(15, 600), generateTimeAgo(3, 365));
@@ -52,26 +52,42 @@ public class DataInitializer {
     }
 
     private enum CategoryEnumeration {
-        ENTERTAINMENT("Отдых и развлечения", "Яндекс такси", "Батутный центр"),
-        SUPERMARKET("Супермаркет", "Пятерочка", "Ашан", "Дикси"),
-        UTILITIES("Коммунальные платежи", "ЖКХ г. Москвы", "МТС-интернет", "Мегафон"),
-        TRANSPORT("Транспорт", "Мосгортранс"),
-        TRAVEL("Путешествия", "Уральские авиалинии", "РЖД", "Аэрофлот", "Тез-тур"),
-        FURNITURE("Мебель", "Леруа мерлен", "Икея", "Твой дом"),
-        RESTARAUNT("Кафе и рестораны", "Шоколадница", "Кофе-хауз"),
-        HEALTHCARE("Здоровье", "Больница г. Москвы", "Аптека 36.6", "Доктор Столетов"),
-        SPORT("Спорт", "Физика", "we-gym", "Фок");
+        ENTERTAINMENT("Отдых и развлечения", 10, "Яндекс такси", "Батутный центр"),
+        SUPERMARKET("Супермаркет", 30, "Пятерочка", "Ашан", "Дикси"),
+        UTILITIES("Коммунальные платежи", 8, "ЖКХ г. Москвы", "МТС-интернет", "Мегафон"),
+        TRANSPORT("Транспорт", 10, "Мосгортранс"),
+        TRAVEL("Путешествия", 3, "Уральские авиалинии", "РЖД", "Аэрофлот", "Тез-тур"),
+        FURNITURE("Мебель", 2, "Леруа мерлен", "Икея", "Твой дом"),
+        RESTARAUNT("Кафе и рестораны", 8, "Шоколадница", "Кофе-хауз"),
+        HEALTHCARE("Здоровье", 2, "Больница г. Москвы", "Аптека 36.6", "Доктор Столетов"),
+        SPORT("Спорт", 2, "Физика", "we-gym", "Фок");
 
         Category category;
         List<Shop> shops = new ArrayList<>();
+        int weight;
 
-        CategoryEnumeration(String name, String... shopNames) {
+        static Random random;
+        static int weightSum = Arrays.stream(values()).mapToInt(elem -> elem.weight).sum();
+
+        //TODO: добавить минимальную и максимальную цену
+        CategoryEnumeration(String name, int weight, String... shopNames) {
             category = new Category(name);
+            this.weight = weight;
             for (String eachName : shopNames) shops.add(new Shop(eachName));
         }
 
         Shop getRandomShop() {
-            return new RandomElement(shops).get();
+            return shops.get(random.nextInt(shops.size()));
+        }
+
+        static CategoryEnumeration getPseudoRandomElement() {
+            int randomNumber = random.nextInt(weightSum);
+            int localSum = 0;
+            for (CategoryEnumeration elem : values()) {
+                localSum += elem.weight;
+                if (randomNumber < localSum) return elem;
+            }
+            return null;
         }
 
     }
