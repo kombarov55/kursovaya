@@ -15,7 +15,8 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by nikolaykombarov on 21.03.17.
@@ -36,10 +37,22 @@ public class ItemDumpVM {
     String selectedName;
     Category selectedCategory;
     String selectedShopName;
+    //TODO: Optional?
     String beginPrice;
     String endPrice;
     Date beginDate;
     Date endDate;
+
+    @AfterCompose
+    public void loadData() {
+        dataInitializer.generateDataIfEmpty();
+        items = itemDAO.getAll();
+        categories = categoryDAO.getAll();
+    }
+
+    @Command @NotifyChange("items")
+    public void notifyItemsAboutFilter() {
+    }
 
     Predicate<Item> itemPredicate = item ->
             eqOrIsNull(item.getName(), selectedName) &&
@@ -54,11 +67,11 @@ public class ItemDumpVM {
     }
 
     private boolean eqOrIsNull(String expected, String got) {
-        return got == null || got.isEmpty() || areSimmilar(expected, got);
+        return got == null || got.isEmpty() || areSimilar(expected, got);
     }
 
-    private boolean areSimmilar(String container, String str) {
-        return container.toLowerCase().matches(".*" + str.toLowerCase() + ".*");
+    private boolean areSimilar(String expected, String got) {
+        return expected.toLowerCase().matches(".*" + got.toLowerCase() + ".*");
     }
 
     private boolean isNumberBetween(int comparee, int begin, int end) {
@@ -74,22 +87,10 @@ public class ItemDumpVM {
         return str == null || str.isEmpty() ? defaultValue : Integer.parseInt(str);
     }
 
-
-    @AfterCompose
-    public void loadData() {
-        dataInitializer.generateDbDataIfEmpty();
-        items = itemDAO.getAll();
-        categories = categoryDAO.getAll();
-    }
-
-    @Command @NotifyChange("items")
-    public void notifyItemsAboutFilter() {
-    }
-
     public List<Item> getItems() {
         return items.stream()
                 .filter(itemPredicate)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public List<Category> getCategories() {

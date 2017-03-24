@@ -1,8 +1,8 @@
 package web;
 
+import db.CategoryDAO;
 import db.ItemDAO;
 import dto.Category;
-import dto.Item;
 import org.zkoss.chart.Charts;
 import org.zkoss.chart.Series;
 import org.zkoss.zk.ui.Component;
@@ -10,10 +10,8 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import sun.java2d.xr.MutableInteger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +21,8 @@ import java.util.Map;
 public class ChartsController extends SelectorComposer {
 
     @WireVariable ItemDAO itemDAO;
+    @WireVariable CategoryDAO categoryDAO;
+
     @Wire Charts pie;
 
 
@@ -35,17 +35,14 @@ public class ChartsController extends SelectorComposer {
         Series series = pie.getSeries();
         series.setType("pie");
         series.setName("По категориям");
-        for (Map.Entry<Category, MutableInteger> pair : getCategoryCounters(itemDAO.getAll()).entrySet())
-            series.addPoint(pair.getKey().getName(), pair.getValue().getValue());
+        for (Map.Entry<Category, Long> pair : getCategoryCountersMap().entrySet())
+            series.addPoint(pair.getKey().getName(), pair.getValue());
     }
 
-    private Map<Category, MutableInteger> getCategoryCounters(List<Item> items) {
-        Map<Category, MutableInteger> ret = new HashMap<>();
-        for (Item item : items) {
-            MutableInteger newValue = new MutableInteger(1);
-            MutableInteger oldValue = ret.put(item.getCategory(), newValue);
-            if (oldValue != null) newValue.setValue(oldValue.getValue() + 1);
-        }
+    private Map<Category, Long> getCategoryCountersMap() {
+        Map<Category, Long> ret = new HashMap<>();
+        for (Category category : categoryDAO.getAll())
+            ret.put(category, itemDAO.countItemsOfCategory(category));
         return ret;
     }
 

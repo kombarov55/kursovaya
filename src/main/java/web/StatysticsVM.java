@@ -36,10 +36,10 @@ public class StatysticsVM {
     public void loadData() {
         TimeGetter timeGetter = new TimeGetter();
         totalSpent = itemDAO.getMoneySpentBetween(new Date(1), timeGetter.getTodaysMidnight());
-        lastDaySpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGetTime(DAY_OF_YEAR, -1), timeGetter.getTodaysMidnight());
-        lastWeekSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGetTime(WEEK_OF_YEAR, -1), timeGetter.getTodaysMidnight());
-        lastMonthSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGetTime(MONTH, -1), timeGetter.getTodaysMidnight());
-        lastYearSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGetTime(YEAR, -1), timeGetter.getTodaysMidnight());
+        lastDaySpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGet(DAY_OF_YEAR, -1), timeGetter.getTodaysMidnight());
+        lastWeekSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGet(WEEK_OF_YEAR, -1), timeGetter.getTodaysMidnight());
+        lastMonthSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGet(MONTH, -1), timeGetter.getTodaysMidnight());
+        lastYearSpent = itemDAO.getMoneySpentBetween(timeGetter.addAndGet(YEAR, -1), timeGetter.getTodaysMidnight());
 
     }
 

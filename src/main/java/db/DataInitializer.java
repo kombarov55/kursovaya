@@ -5,11 +5,14 @@ import dto.Item;
 import dto.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import util.TimeGetter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import static java.util.Calendar.*;
 
 /**
  * Created by nikolaykombarov on 24.03.17.
@@ -19,14 +22,9 @@ public class DataInitializer {
 
     @Autowired ItemDAO itemDAO;
 
+    //TODO: магазины тоже должны создаваться тут
     List<Category> categories = new ArrayList<>();
-    List<Item> items = new ArrayList<>();
-
-    {
-        categories.add(new Category("Верхняя одежда"));
-        categories.add(new Category("Мобильная техника"));
-        categories.add(new Category("Обувь"));
-    }
+    List<Shop> shops = new ArrayList<>();
 
     String[] coatNames = {"Ветровка", "Пуховик", "Куртка", "Пальто"};
     String[] coatCompanyNames = {"Pal Zeliery", "Boss"};
@@ -36,12 +34,21 @@ public class DataInitializer {
     String[] shoesCompanyNames = {"Nike", "Reebok"};
     Random r = new Random();
 
-    public void generateDbDataIfEmpty() {
-        if (itemDAO.getAll().size() == 0)
-            itemDAO.addAll(generateItems(r.nextInt(1000)));
+    {
+        categories.add(new Category("Верхняя одежда"));
+        categories.add(new Category("Мобильная техника"));
+        categories.add(new Category("Обувь"));
+
+        for (String shopName : coatCompanyNames) shops.add(new Shop(shopName));
+        for (String shopName : cellPhoneCompanyNames) shops.add(new Shop(shopName));
+        for (String shopName : shoesCompanyNames) shops.add(new Shop(shopName));
     }
 
-    private List<Item> generateItems(int amount) {
+    public void generateDataIfEmpty() {
+        if (itemDAO.getAll().size() == 0) itemDAO.saveAll(generateItemList(r.nextInt(1000)));
+    }
+
+    private List<Item> generateItemList(int amount) {
         List<Item> ret = new ArrayList<>();
         for (int i = 0; i < amount; i++)
             ret.add(generateItem());
@@ -49,24 +56,45 @@ public class DataInitializer {
     }
 
     private Item generateItem() {
-        Category category = categories.get(r.nextInt(categories.size()));
         String name = "";
         Shop shop = null;
+        Category category = randomValueFrom(categories);
         switch (category.getName()) {
             case "Верхняя одежда":
-                shop = new Shop(coatCompanyNames[r.nextInt(coatCompanyNames.length)]);
-                name = coatNames[r.nextInt(coatNames.length)];
+                name = randomValueFrom(coatNames);
+                shop = getShopByName(randomValueFrom(coatCompanyNames));
                 break;
             case "Мобильная техника":
-                shop = new Shop(cellPhoneCompanyNames[r.nextInt(cellPhoneCompanyNames.length)]);
-                name = cellPhoneNames[r.nextInt(cellPhoneNames.length)];
+                name = randomValueFrom(cellPhoneNames);
+                shop = getShopByName(randomValueFrom(cellPhoneCompanyNames));
                 break;
             case "Обувь":
-                shop = new Shop(shoesCompanyNames[r.nextInt(shoesCompanyNames.length)]);
-                name = shoesNames[r.nextInt(shoesNames.length)];
+                name = randomValueFrom(shoesNames);
+                shop = getShopByName(randomValueFrom(shoesCompanyNames));
         }
-        return new Item(name, category, shop, r.nextInt(10000), new Date(System.currentTimeMillis() - r.nextInt() * Integer.MAX_VALUE / 2));
+        return new Item(name, category, shop, getRandomPrice(15, 500), getRandomDateAgo());
     }
 
+    private <T> T randomValueFrom(T[] array) {
+        return array[r.nextInt(array.length)];
+    }
+
+    private <T> T randomValueFrom(List<T> list) {
+        return list.get(r.nextInt(list.size()));
+    }
+
+    private int getRandomPrice(int base, int maxRandom) {
+        return base + r.nextInt(maxRandom);
+    }
+
+    private Date getRandomDateAgo() {
+        return new TimeGetter(r.nextInt(3)).addAndGet(DAY_OF_YEAR, - r.nextInt(365));
+    }
+
+    private Shop getShopByName(String name) {
+        return shops.stream()
+                .filter(shop -> shop.getName().equals(name))
+                .findFirst().get();
+    }
 
 }
