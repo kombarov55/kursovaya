@@ -6,19 +6,14 @@ import db.DataInitializer;
 import db.ItemDAO;
 import dto.Category;
 import dto.Item;
-import dto.Shop;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import util.TimeGetter;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -33,7 +28,6 @@ public class ItemDumpVM {
 
     @WireVariable ItemDAO itemDAO;
     @WireVariable CategoryDAO categoryDAO;
-
 
 
     List<Item> items;
@@ -60,20 +54,25 @@ public class ItemDumpVM {
     }
 
     private boolean eqOrIsNull(String expected, String got) {
-        return got == null || got.isEmpty() || got.equalsIgnoreCase(expected);
+        return got == null || got.isEmpty() || areSimmilar(expected, got);
     }
 
-    private boolean isNumberBetween(long comparee, long begin, long end) {
+    private boolean areSimmilar(String container, String str) {
+        return container.toLowerCase().matches(".*" + str.toLowerCase() + ".*");
+    }
+
+    private boolean isNumberBetween(int comparee, int begin, int end) {
         return comparee > begin && comparee < end;
     }
 
-    private boolean isNumberBetween(long comparee, String beginStr, String endStr) {
-        return isNumberBetween(
-                comparee,
-                beginStr == null || beginStr.isEmpty() ? 0 :  Long.parseLong(beginStr),
-                endStr == null || endStr.isEmpty() ? Long.MAX_VALUE : Long.parseLong(endStr));
+    private boolean isNumberBetween(int comparee, String beginStr, String endStr) {
+        return isNumberBetween(comparee,
+                parseIntOrDefault(beginStr, 0), parseIntOrDefault(endStr, Integer.MAX_VALUE));
     }
 
+    private int parseIntOrDefault(String str, int defaultValue) {
+        return str == null || str.isEmpty() ? defaultValue : Integer.parseInt(str);
+    }
 
 
     @AfterCompose

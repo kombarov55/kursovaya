@@ -16,11 +16,11 @@
 
         <listbox model="@bind(vm.items)" sclass="scrollable">
             <listhead>
-                <listheader hflex="10" label="Наименование" />
-                <listheader hflex="10" label="Категория" />
-                <listheader hflex="11" label="Производитель" />
-                <listheader hflex="10" label="Цена ($)" />
-                <listheader hflex="10" label="Дата покупки" />
+                <listheader hflex="10" label="Наименование" sort="auto(name)" />
+                <listheader hflex="10" label="Категория" sort="auto(category.name)" />
+                <listheader hflex="11" label="Производитель" sort="auto(seller.name)" />
+                <listheader hflex="10" label="Цена ($)" sort="auto(price)" />
+                <listheader hflex="10" label="Дата покупки" sort="auto(purchaseDate)" />
             </listhead>
             <template name="model" var="item">
                 <listitem>
