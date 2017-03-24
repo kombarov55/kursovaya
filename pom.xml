@@ -29,7 +29,16 @@
             <artifactId>zkbind</artifactId>
             <version>${zk.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.zkoss.zk</groupId>
+            <artifactId>zhtml</artifactId>
+            <version>${zk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zkoss.chart</groupId>
+            <artifactId>zkcharts</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>javax</groupId>
@@ -113,7 +122,6 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>

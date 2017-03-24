@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<zk xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul  http://www.zkoss.org/2005/zul/zul.xsd"
+>
+	<window apply="web.ChartsController" style="float: left">
+		<hbox>
+			<charts id="pie" type="pie" title="За все время" />
+		</hbox>
+	</window>
+
+</zk>

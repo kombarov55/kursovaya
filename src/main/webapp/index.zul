@@ -12,6 +12,7 @@
         <center style="border: 0; margin-left: 1px">
             <borderlayout>
                 <north height="70%" border="normal">
+                    <include src="WEB-INF/zuls/charts.zul" />
                 </north>
                 <south height="30%" border="normal">
                     <include src="WEB-INF/zuls/statystics.zul" />
