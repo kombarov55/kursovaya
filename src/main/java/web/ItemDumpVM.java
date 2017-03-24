@@ -1,6 +1,8 @@
 package web;
 
 
+import db.CategoryDAO;
+import db.DataInitializer;
 import db.ItemDAO;
 import dto.Category;
 import dto.Item;
@@ -10,7 +12,9 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import util.TimeGetter;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -24,58 +28,63 @@ import java.util.stream.Collectors;
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class ItemDumpVM {
 
+    //TODO: куда его поставить?
+    @WireVariable DataInitializer dataInitializer;
+
     @WireVariable ItemDAO itemDAO;
+    @WireVariable CategoryDAO categoryDAO;
+
+
 
     List<Item> items;
-    Set<String> names = new HashSet<>();
-    Set<Shop> shops = new HashSet<>();
-    Set<Category> categories = new HashSet<>();
+    List<Category> categories;
 
     String selectedName;
     Category selectedCategory;
-    Shop selectedShop;
-    int beginPrice;
-    int endPrice = Integer.MAX_VALUE;
-    Date beginDate = new Date(1);
-    Date endDate = new Date();
+    String selectedShopName;
+    String beginPrice;
+    String endPrice;
+    Date beginDate;
+    Date endDate;
 
     Predicate<Item> itemPredicate = item ->
             eqOrIsNull(item.getName(), selectedName) &&
                     eqOrIsNull(item.getCategory(), selectedCategory) &&
-                    eqOrIsNull(item.getSeller(), selectedShop) &&
+                    eqOrIsNull(item.getSeller().getName(), selectedShopName) &&
                     isNumberBetween(item.getPrice(), beginPrice, endPrice) &&
                     (beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime()) &&
                     (endDate == null || item.getPurchaseDate().getTime() < endDate.getTime());
 
-    private boolean eqOrIsNull(Object expected, Object str) {
-        return str == null || str.equals(expected);
+    private boolean eqOrIsNull(Object expected, Object got) {
+        return got == null || got.equals(expected);
+    }
+
+    private boolean eqOrIsNull(String expected, String got) {
+        return got == null || got.isEmpty() || got.equalsIgnoreCase(expected);
     }
 
     private boolean isNumberBetween(long comparee, long begin, long end) {
         return comparee > begin && comparee < end;
     }
 
+    private boolean isNumberBetween(long comparee, String beginStr, String endStr) {
+        return isNumberBetween(
+                comparee,
+                beginStr == null || beginStr.isEmpty() ? 0 :  Long.parseLong(beginStr),
+                endStr == null || endStr.isEmpty() ? Long.MAX_VALUE : Long.parseLong(endStr));
+    }
+
+
+
     @AfterCompose
     public void loadData() {
+        dataInitializer.generateDbDataIfEmpty();
         items = itemDAO.getAll();
-
-        for (Item each : items) {
-            names.add(each.getName());
-            shops.add(each.getSeller());
-            categories.add(each.getCategory());
-        }
-
+        categories = categoryDAO.getAll();
     }
 
     @Command @NotifyChange("items")
     public void notifyItemsAboutFilter() {
-    }
-
-    public List<String> getNames() {
-        return items.stream()
-                .map(Item::getName)
-                .distinct()
-                .collect(Collectors.toList());
     }
 
     public List<Item> getItems() {
@@ -84,12 +93,7 @@ public class ItemDumpVM {
                 .collect(Collectors.toList());
     }
 
-
-    public Set<Shop> getShops() {
-        return shops;
-    }
-
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
@@ -109,28 +113,28 @@ public class ItemDumpVM {
         this.selectedCategory = selectedCategory;
     }
 
-    public Shop getSelectedShop() {
-        return selectedShop;
+    public String getSelectedShopName() {
+        return selectedShopName;
     }
 
-    public void setSelectedShop(Shop selectedShop) {
-        this.selectedShop = selectedShop;
+    public void setSelectedShopName(String selectedShopName) {
+        this.selectedShopName = selectedShopName;
     }
 
-    public int getBeginPrice() {
+    public String getBeginPrice() {
         return beginPrice;
     }
 
-    public void setBeginPrice(int beginPrice) {
+    public void setBeginPrice(String beginPrice) {
         this.beginPrice = beginPrice;
     }
 
-    public int getEndPrice() {
+    public String getEndPrice() {
         return endPrice;
     }
 
-    public void setEndPrice(int endPrice) {
-        this.endPrice = endPrice == 0 ? Integer.MAX_VALUE : endPrice;
+    public void setEndPrice(String endPrice) {
+        this.endPrice = endPrice;
     }
 
     public Date getBeginDate() {

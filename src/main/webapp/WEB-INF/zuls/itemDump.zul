@@ -1,17 +1,16 @@
 <zk>
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.ItemDumpVM')">
-
         <vbox>
-            <hbox width="100%">
-                <combobox placeholder="Наименование.." selectedItem="@bind(vm.selectedName)" model="@load(vm.names)" onChange="@command('notifyItemsAboutFilter')"/>
-                <combobox placeholder="Категория.." width="100%" selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
-                <combobox placeholder="Производитель.." width="100%" model="@load(vm.shops)" selectedItem="@bind(vm.selectedShop)" onChange="@command('notifyItemsAboutFilter')" />
+            <hbox width="100%" pack="center">
+                <combobox placeholder="Категория.." selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
+				<textbox value="@bind(vm.selectedName)" placeholder="Наименование.." onChange="@command('notifyItemsAboutFilter')" />
+				<textbox value="@bind(vm.selectedShopName)" placeholder="Продавец.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
-            <hbox>
-                <textbox placeholder="Цена от.." width="80%" value="@bind(vm.beginPrice)" onChange="@command('notifyItemsAboutFilter')" />
-                <textbox placeholder="Цена до.." width="80%" value="@bind(vm.endPrice)" onChange="@command('notifyItemsAboutFilter')" />
-                <datebox placeholder="Дата от.." value="@bind(vm.beginDate)" onChange="@command('notifyItemsAboutFilter')"  />
-                <datebox placeholder="Дата до.." value="@bind(vm.endDate)" onChange="@command('notifyItemsAboutFilter')" />
+            <hbox pack="center">
+                <textbox placeholder="Цена от.." width="80%" hflex="8" value="@bind(vm.beginPrice)" onChange="@command('notifyItemsAboutFilter')" />
+                <textbox placeholder="Цена до.." width="80%" hflex="8" value="@bind(vm.endPrice)" onChange="@command('notifyItemsAboutFilter')" />
+                <datebox placeholder="Дата от.." width="80%" hflex="10" value="@bind(vm.beginDate)" onChange="@command('notifyItemsAboutFilter')"  />
+                <datebox placeholder="Дата до.." width="80%" hflex="10" value="@bind(vm.endDate)" onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
         </vbox>
 
