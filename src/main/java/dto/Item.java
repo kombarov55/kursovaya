@@ -20,7 +20,6 @@ public class Item {
 
     @Id @GeneratedValue(strategy = AUTO)
     long id;
-    String name;
 
     @ManyToOne(cascade = ALL) Category category;
     @ManyToOne(cascade = ALL) Shop seller;
@@ -30,8 +29,7 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, Category category, Shop seller, int price, Date purchaseDate) {
-        this.name = name;
+    public Item(Category category, Shop seller, int price, Date purchaseDate) {
         this.category = category;
         this.seller = seller;
         this.price = price;
@@ -40,10 +38,6 @@ public class Item {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setCategory(Category category) {
@@ -64,10 +58,6 @@ public class Item {
 
     public long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Category getCategory() {

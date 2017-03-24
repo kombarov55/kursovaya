@@ -5,6 +5,7 @@ import dto.Item;
 import dto.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import util.RandomElement;
 import util.TimeGetter;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_YEAR;
 
 /**
  * Created by nikolaykombarov on 24.03.17.
@@ -22,27 +23,7 @@ public class DataInitializer {
 
     @Autowired ItemDAO itemDAO;
 
-    //TODO: магазины тоже должны создаваться тут
-    List<Category> categories = new ArrayList<>();
-    List<Shop> shops = new ArrayList<>();
-
-    String[] coatNames = {"Ветровка", "Пуховик", "Куртка", "Пальто"};
-    String[] coatCompanyNames = {"Pal Zeliery", "Boss"};
-    String[] cellPhoneNames = {"Смартфон", "Планшет"};
-    String[] cellPhoneCompanyNames = {"Sony", "Samsung", "Nexus", "IPhone"};
-    String[] shoesNames = {"Кроссовки", "Ботинки"};
-    String[] shoesCompanyNames = {"Nike", "Reebok"};
-    Random r = new Random();
-
-    {
-        categories.add(new Category("Верхняя одежда"));
-        categories.add(new Category("Мобильная техника"));
-        categories.add(new Category("Обувь"));
-
-        for (String shopName : coatCompanyNames) shops.add(new Shop(shopName));
-        for (String shopName : cellPhoneCompanyNames) shops.add(new Shop(shopName));
-        for (String shopName : shoesCompanyNames) shops.add(new Shop(shopName));
-    }
+    static Random r = new Random();
 
     public void generateDataIfEmpty() {
         if (itemDAO.getAll().size() == 0) itemDAO.saveAll(generateItemList(r.nextInt(1000)));
@@ -56,45 +37,43 @@ public class DataInitializer {
     }
 
     private Item generateItem() {
-        String name = "";
-        Shop shop = null;
-        Category category = randomValueFrom(categories);
-        switch (category.getName()) {
-            case "Верхняя одежда":
-                name = randomValueFrom(coatNames);
-                shop = getShopByName(randomValueFrom(coatCompanyNames));
-                break;
-            case "Мобильная техника":
-                name = randomValueFrom(cellPhoneNames);
-                shop = getShopByName(randomValueFrom(cellPhoneCompanyNames));
-                break;
-            case "Обувь":
-                name = randomValueFrom(shoesNames);
-                shop = getShopByName(randomValueFrom(shoesCompanyNames));
-        }
-        return new Item(name, category, shop, getRandomPrice(15, 500), getRandomDateAgo());
+        CategoryEnumeration enumElement = new RandomElement(CategoryEnumeration.values()).get();
+        Category category = enumElement.category;
+        Shop shop = enumElement.getRandomShop();
+        return new Item(category, shop, generatePrice(15, 600), generateTimeAgo(3, 365));
     }
 
-    private <T> T randomValueFrom(T[] array) {
-        return array[r.nextInt(array.length)];
-    }
-
-    private <T> T randomValueFrom(List<T> list) {
-        return list.get(r.nextInt(list.size()));
-    }
-
-    private int getRandomPrice(int base, int maxRandom) {
+    private int generatePrice(int base, int maxRandom) {
         return base + r.nextInt(maxRandom);
     }
 
-    private Date getRandomDateAgo() {
-        return new TimeGetter(r.nextInt(3)).addAndGet(DAY_OF_YEAR, - r.nextInt(365));
+    private Date generateTimeAgo(int yearSpread, int daySpread) {
+        return new TimeGetter(r.nextInt(yearSpread)).addAndGet(DAY_OF_YEAR, -r.nextInt(daySpread));
     }
 
-    private Shop getShopByName(String name) {
-        return shops.stream()
-                .filter(shop -> shop.getName().equals(name))
-                .findFirst().get();
+    private enum CategoryEnumeration {
+        ENTERTAINMENT("Отдых и развлечения", "Яндекс такси", "Батутный центр"),
+        SUPERMARKET("Супермаркет", "Пятерочка", "Ашан", "Дикси"),
+        UTILITIES("Коммунальные платежи", "ЖКХ г. Москвы", "МТС-интернет", "Мегафон"),
+        TRANSPORT("Транспорт", "Мосгортранс"),
+        TRAVEL("Путешествия", "Уральские авиалинии", "РЖД", "Аэрофлот", "Тез-тур"),
+        FURNITURE("Мебель", "Леруа мерлен", "Икея", "Твой дом"),
+        RESTARAUNT("Кафе и рестораны", "Шоколадница", "Кофе-хауз"),
+        HEALTHCARE("Здоровье", "Больница г. Москвы", "Аптека 36.6", "Доктор Столетов"),
+        SPORT("Спорт", "Физика", "we-gym", "Фок");
+
+        Category category;
+        List<Shop> shops = new ArrayList<>();
+
+        CategoryEnumeration(String name, String... shopNames) {
+            category = new Category(name);
+            for (String eachName : shopNames) shops.add(new Shop(eachName));
+        }
+
+        Shop getRandomShop() {
+            return new RandomElement(shops).get();
+        }
+
     }
 
 }

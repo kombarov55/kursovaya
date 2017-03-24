@@ -3,7 +3,6 @@
         <vbox>
             <hbox width="100%" pack="center">
                 <combobox placeholder="Категория.." selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
-				<textbox value="@bind(vm.selectedName)" placeholder="Наименование.." onChange="@command('notifyItemsAboutFilter')" />
 				<textbox value="@bind(vm.selectedShopName)" placeholder="Продавец.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox pack="center">
@@ -16,7 +15,6 @@
 
         <listbox model="@bind(vm.items)" sclass="scrollable">
             <listhead>
-                <listheader hflex="10" label="Наименование" sort="auto(name)" />
                 <listheader hflex="10" label="Категория" sort="auto(category.name)" />
                 <listheader hflex="11" label="Производитель" sort="auto(seller.name)" />
                 <listheader hflex="10" label="Цена ($)" sort="auto(price)" />
@@ -24,7 +22,6 @@
             </listhead>
             <template name="model" var="item">
                 <listitem>
-                    <listcell label="@load(item.name)" />
                     <listcell label="@load(item.category.name)" />
                     <listcell label="@load(item.seller.name)" />
                     <listcell label="@load(item.price) @converter('formatedNumber', format='###,### $')" />

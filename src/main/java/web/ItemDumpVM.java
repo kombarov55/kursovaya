@@ -34,7 +34,6 @@ public class ItemDumpVM {
     List<Item> items;
     List<Category> categories;
 
-    String selectedName;
     Category selectedCategory;
     String selectedShopName;
     //TODO: Optional?
@@ -55,8 +54,7 @@ public class ItemDumpVM {
     }
 
     Predicate<Item> itemPredicate = item ->
-            eqOrIsNull(item.getName(), selectedName) &&
-                    eqOrIsNull(item.getCategory(), selectedCategory) &&
+            eqOrIsNull(item.getCategory(), selectedCategory) &&
                     eqOrIsNull(item.getSeller().getName(), selectedShopName) &&
                     isNumberBetween(item.getPrice(), beginPrice, endPrice) &&
                     (beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime()) &&
@@ -95,14 +93,6 @@ public class ItemDumpVM {
 
     public List<Category> getCategories() {
         return categories;
-    }
-
-    public String getSelectedName() {
-        return selectedName;
-    }
-
-    public void setSelectedName(String selectedName) {
-        this.selectedName = selectedName;
     }
 
     public Category getSelectedCategory() {

@@ -19,7 +19,7 @@ public class ItemDAO extends HibernateDaoSupport {
     }
 
     @Transactional public long getMoneySpentBetween(Date before, Date after) {
-        Object x = getHibernateTemplate().execute(session -> session.createQuery("" +
+        Long result = (Long) getHibernateTemplate().execute(session -> session.createQuery("" +
                 "select sum(i.price) " +
                 "from Item i " +
                 "where i.purchaseDate > :dateBefore " +
@@ -27,7 +27,7 @@ public class ItemDAO extends HibernateDaoSupport {
                 .setDate("dateBefore", before)
                 .setDate("dateAfter", after)
                 .list()).get(0);
-        return x == null ? 0 : (long) x;
+        return result == null ? 0 : result;
     }
 
     @Transactional public void saveAll(List<Item> items) {
