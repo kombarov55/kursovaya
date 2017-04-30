@@ -3,6 +3,7 @@ package db;
 import dto.Category;
 import dto.Item;
 import dto.Shop;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import util.TimeGetter;
@@ -19,13 +20,13 @@ import static java.util.Calendar.DAY_OF_YEAR;
  * Created by nikolaykombarov on 24.03.17.
  */
 @Component
-public class DataInitializer {
+public class DataInitializer implements InitializingBean {
 
     @Autowired ItemDAO itemDAO;
 
     static Random r = new Random();
 
-    public void generateDataIfEmpty() {
+    @Override public void afterPropertiesSet() throws Exception {
         if (itemDAO.getAll().size() == 0) itemDAO.saveAll(generateItemList(r.nextInt(1000)));
     }
 
@@ -69,7 +70,6 @@ public class DataInitializer {
         static Random random;
         static int weightSum = Arrays.stream(values()).mapToInt(elem -> elem.weight).sum();
 
-        //TODO: добавить минимальную и максимальную цену
         CategoryEnumeration(String name, int weight, String... shopNames) {
             category = new Category(name);
             this.weight = weight;

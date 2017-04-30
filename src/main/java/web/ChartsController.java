@@ -21,7 +21,6 @@ import java.util.Map;
 public class ChartsController extends SelectorComposer {
 
     @WireVariable ItemDAO itemDAO;
-    @WireVariable CategoryDAO categoryDAO;
 
     @Wire Charts pie;
 
@@ -35,15 +34,8 @@ public class ChartsController extends SelectorComposer {
         Series series = pie.getSeries();
         series.setType("pie");
         series.setName("По категориям");
-        for (Map.Entry<Category, Long> pair : getCategoryCountersMap().entrySet())
-            series.addPoint(pair.getKey().getName(), pair.getValue());
-    }
-
-    private Map<Category, Long> getCategoryCountersMap() {
-        Map<Category, Long> ret = new HashMap<>();
-        for (Category category : categoryDAO.getAll())
-            ret.put(category, itemDAO.countItemsOfCategory(category));
-        return ret;
+        for (Map.Entry<String, Long> pair : itemDAO.countItemsByCategory().entrySet())
+            series.addPoint(pair.getKey(), pair.getValue());
     }
 
 }

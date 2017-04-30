@@ -12,7 +12,6 @@ import static javax.persistence.GenerationType.AUTO;
 @Entity
 public class Category {
 
-
     @Id @GeneratedValue(strategy = AUTO) long id;
     String name;
 

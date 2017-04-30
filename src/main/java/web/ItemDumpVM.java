@@ -24,9 +24,6 @@ import static java.util.stream.Collectors.toList;
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class ItemDumpVM {
 
-    //TODO: куда его поставить?
-    @WireVariable DataInitializer dataInitializer;
-
     @WireVariable ItemDAO itemDAO;
     @WireVariable CategoryDAO categoryDAO;
 
@@ -36,7 +33,6 @@ public class ItemDumpVM {
 
     Category selectedCategory;
     String selectedShopName;
-    //TODO: Optional?
     String beginPrice;
     String endPrice;
     Date beginDate;
@@ -44,7 +40,6 @@ public class ItemDumpVM {
 
     @AfterCompose
     public void loadData() {
-        dataInitializer.generateDataIfEmpty();
         items = itemDAO.getAll();
         categories = categoryDAO.getAll();
     }
