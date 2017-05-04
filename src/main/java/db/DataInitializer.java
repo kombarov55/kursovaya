@@ -27,7 +27,8 @@ public class DataInitializer implements InitializingBean {
     static Random r = new Random();
 
     @Override public void afterPropertiesSet() throws Exception {
-        if (itemDAO.getAll().size() == 0) itemDAO.saveAll(generateItemList(r.nextInt(1000)));
+        if (itemDAO.getAll().size() == 0)
+            itemDAO.saveAll(generateItemList(r.nextInt(1000)));
     }
 
     private List<Item> generateItemList(int amount) {
@@ -41,7 +42,7 @@ public class DataInitializer implements InitializingBean {
         CategoryEnumeration enumElement = CategoryEnumeration.getPseudoRandomElement();
         Category category = enumElement.category;
         Shop shop = enumElement.getRandomShop();
-        return new Item(category, shop, generatePrice(15, 600), generateTimeAgo(3, 365));
+        return new Item(null, shop, generatePrice(15, 600), generateTimeAgo(3, 365));
     }
 
     private int generatePrice(int base, int maxRandom) {
@@ -67,7 +68,7 @@ public class DataInitializer implements InitializingBean {
         List<Shop> shops = new ArrayList<>();
         int weight;
 
-        static Random random;
+        static Random random = new Random();
         static int weightSum = Arrays.stream(values()).mapToInt(elem -> elem.weight).sum();
 
         CategoryEnumeration(String name, int weight, String... shopNames) {

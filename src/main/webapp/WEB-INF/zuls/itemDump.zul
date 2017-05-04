@@ -1,11 +1,11 @@
 <zk>
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.ItemDumpVM')">
         <vbox>
-            <hbox width="100%" pack="center">
+            <hbox pack="center" width="100%">
                 <combobox placeholder="Категория.." selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
 				<textbox value="@bind(vm.selectedShopName)" placeholder="Продавец.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
-            <hbox pack="center">
+            <hbox pack="center" width="100%">
                 <textbox placeholder="Цена от.." width="80%" hflex="8" value="@bind(vm.beginPrice)" onChange="@command('notifyItemsAboutFilter')" />
                 <textbox placeholder="Цена до.." width="80%" hflex="8" value="@bind(vm.endPrice)" onChange="@command('notifyItemsAboutFilter')" />
                 <datebox placeholder="Дата от.." width="80%" hflex="10" value="@bind(vm.beginDate)" onChange="@command('notifyItemsAboutFilter')"  />
@@ -13,7 +13,7 @@
             </hbox>
         </vbox>
 
-        <listbox model="@bind(vm.items)" sclass="scrollable">
+        <listbox model="@bind(vm.items)" height="100%" style="overflow-y: auto">
             <listhead>
                 <listheader hflex="10" label="Категория" sort="auto(category.name)" />
                 <listheader hflex="11" label="Производитель" sort="auto(seller.name)" />

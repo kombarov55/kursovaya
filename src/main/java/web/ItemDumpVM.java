@@ -28,19 +28,17 @@ public class ItemDumpVM {
     @WireVariable CategoryDAO categoryDAO;
 
 
-    List<Item> items;
     List<Category> categories;
 
     Category selectedCategory;
     String selectedShopName;
-    String beginPrice;
-    String endPrice;
+    Integer beginPrice;
+    Integer endPrice;
     Date beginDate;
     Date endDate;
 
     @AfterCompose
     public void loadData() {
-        items = itemDAO.getAll();
         categories = categoryDAO.getAll();
     }
 
@@ -48,45 +46,9 @@ public class ItemDumpVM {
     public void notifyItemsAboutFilter() {
     }
 
-    Predicate<Item> itemPredicate = item ->
-            eqOrIsNull(item.getCategory(), selectedCategory) &&
-                    eqOrIsNull(item.getSeller().getName(), selectedShopName) &&
-                    isNumberBetween(item.getPrice(), beginPrice, endPrice) &&
-                    (beginDate == null || item.getPurchaseDate().getTime() > beginDate.getTime()) &&
-                    (endDate == null || item.getPurchaseDate().getTime() < endDate.getTime());
-
-    private boolean eqOrIsNull(Object expected, Object got) {
-        return got == null || got.equals(expected);
-    }
-
-    private boolean eqOrIsNull(String expected, String got) {
-        return got == null || got.isEmpty() || areSimilar(expected, got);
-    }
-
-    private boolean areSimilar(String expected, String got) {
-        return expected.toLowerCase().matches(".*" + got.toLowerCase() + ".*");
-    }
-
-    private boolean isNumberBetween(int comparee, int begin, int end) {
-        return comparee > begin && comparee < end;
-    }
-
-    private boolean isNumberBetween(int comparee, String beginStr, String endStr) {
-        return isNumberBetween(comparee,
-                parseIntOrDefault(beginStr, 0), parseIntOrDefault(endStr, Integer.MAX_VALUE));
-    }
-
-    private int parseIntOrDefault(String str, int defaultValue) {
-        return str == null || str.isEmpty() ? defaultValue : Integer.parseInt(str);
-    }
-
     public List<Item> getItems() {
-        return items.stream()
-                .filter(itemPredicate)
-                .collect(toList());
+        return itemDAO.getByFilter(selectedCategory == null ? "" : selectedCategory.getName(), selectedShopName, beginPrice, endPrice, beginDate, endDate);
     }
-
-
 
     public List<Category> getCategories() {
         return categories;
@@ -108,19 +70,19 @@ public class ItemDumpVM {
         this.selectedShopName = selectedShopName;
     }
 
-    public String getBeginPrice() {
+    public Integer getBeginPrice() {
         return beginPrice;
     }
 
-    public void setBeginPrice(String beginPrice) {
+    public void setBeginPrice(Integer beginPrice) {
         this.beginPrice = beginPrice;
     }
 
-    public String getEndPrice() {
+    public Integer getEndPrice() {
         return endPrice;
     }
 
-    public void setEndPrice(String endPrice) {
+    public void setEndPrice(Integer endPrice) {
         this.endPrice = endPrice;
     }
 

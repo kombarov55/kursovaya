@@ -54,29 +54,29 @@ public class ItemDAO extends HibernateDaoSupport {
         List<Item> ret = new ArrayList<>();
         String sql = "SELECT i.price, i.purchasedate, c.name, s.name " +
                 "FROM item i " +
-                "  JOIN category c ON i.category_id = c.id " +
-                "  JOIN shop s ON i.seller_id = s.id " +
+                "  LEFT JOIN category c ON i.category_id = c.id " +
+                "  LEFT JOIN shop s ON i.seller_id = s.id " +
                 "where " +
-                    "c.name like ? || '%' " +
+                    "(c is null or c.name like ? || '%') " +
                     "and " +
-                    "s.name like ? || '%' " +
+                    "(s is null or  s.name like ? || '%') " +
                     "and " +
                     "i.price > ? " +
                     "and " +
                     "i.price < ? " +
-                    "and " +
-                    "i.purchasedate > ? " +
-                    "and " +
-                    "i.purchasedate < ? " +
+//                    "and " +
+//                    "i.purchasedate > ? " +
+//                    "and " +
+//                    "i.purchasedate < ? " +
                 "order by i.purchasedate desc";
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, substituteIfNeeded(categoryName, ""));
             ps.setString(2, substituteIfNeeded(shopName, ""));
-            ps.setInt(3, substituteIfNeeded(beginPrice, Integer.MIN_VALUE));
-            ps.setInt(4, substituteIfNeeded(endPrice, Integer.MAX_VALUE));
-            ps.setDate(5, substituteIfNeeded(parseDate(from), new java.sql.Date(1)));
-            ps.setDate(6, substituteIfNeeded(parseDate(to), parseDate(new Date())));
+            ps.setInt(3, substituteIfNeeded(beginPrice, 0));
+            ps.setInt(4, substituteIfNeeded(endPrice, 99999999));
+//            ps.setDate(5, substituteIfNeeded(parseDate(from), new java.sql.Date(1)));
+//            ps.setDate(6, substituteIfNeeded(parseDate(to), parseDate(new Date())));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ret.add(extractItem(rs));
