@@ -46,13 +46,37 @@ public class ItemDAO extends HibernateDaoSupport {
 
     @Transactional
     public List<Item> getAll() {
+        return getByFilter(null, null, null, null, null, null);
+    }
+
+    @Transactional
+    public List<Item> getByFilter(String categoryName, String shopName, Integer beginPrice, Integer endPrice, Date from, Date to) {
         List<Item> ret = new ArrayList<>();
         String sql = "SELECT i.price, i.purchasedate, c.name, s.name " +
                 "FROM item i " +
                 "  JOIN category c ON i.category_id = c.id " +
-                "  JOIN shop s ON i.seller_id = s.id";
+                "  JOIN shop s ON i.seller_id = s.id " +
+                "where " +
+                    "c.name like ? || '%' " +
+                    "and " +
+                    "s.name like ? || '%' " +
+                    "and " +
+                    "i.price > ? " +
+                    "and " +
+                    "i.price < ? " +
+                    "and " +
+                    "i.purchasedate > ? " +
+                    "and " +
+                    "i.purchasedate < ? " +
+                "order by i.purchasedate desc";
         try (Connection con = dataSource.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, substituteIfNeeded(categoryName, ""));
+            ps.setString(2, substituteIfNeeded(shopName, ""));
+            ps.setInt(3, substituteIfNeeded(beginPrice, Integer.MIN_VALUE));
+            ps.setInt(4, substituteIfNeeded(endPrice, Integer.MAX_VALUE));
+            ps.setDate(5, substituteIfNeeded(parseDate(from), new java.sql.Date(1)));
+            ps.setDate(6, substituteIfNeeded(parseDate(to), parseDate(new Date())));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ret.add(extractItem(rs));
@@ -107,13 +131,13 @@ public class ItemDAO extends HibernateDaoSupport {
             }
         } catch (Exception ignored){}
         return categoryName_amount;
+    }
 
+    private java.sql.Date parseDate(Date date) {
+        return date == null ? null : new java.sql.Date(date.getTime());
+    }
 
-//        return (long) getHibernateTemplate().execute(session -> session.createQuery("" +
-//                "select count(*) " +
-//                "from Item i " +
-//                "where i.category = :category")
-//                .setParameter("category", category)
-//                .list().get(0));
+    private <T> T substituteIfNeeded(T original, T substitution) {
+        return original == null ? substitution : original;
     }
 }

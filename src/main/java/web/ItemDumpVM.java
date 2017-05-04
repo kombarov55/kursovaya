@@ -86,6 +86,8 @@ public class ItemDumpVM {
                 .collect(toList());
     }
 
+
+
     public List<Category> getCategories() {
         return categories;
     }
