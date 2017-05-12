@@ -4,7 +4,10 @@
         .right-border {border-right: 1px solid black}
     </style>
     <borderlayout height="100%" width="100%">
-        <north height="15%" zclass="borderless">
+        <north>
+            <menubar>
+                <menuitem label="Выйти" href="/logout.do" />
+            </menubar>
         </north>
         <west width="35%" autoscroll="true">
             <include src="/WEB-INF/zuls/itemDump.zul" />
