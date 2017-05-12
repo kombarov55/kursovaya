@@ -1,16 +1,20 @@
 package web;
 
 import db.CategoryDAO;
+import db.ClientDAO;
 import db.ItemDAO;
 import dto.Category;
+import dto.Client;
 import org.zkoss.chart.Charts;
 import org.zkoss.chart.Series;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +25,7 @@ import java.util.Map;
 public class ChartsController extends SelectorComposer {
 
     @WireVariable ItemDAO itemDAO;
+    @WireVariable ClientDAO clientDAO;
 
     @Wire Charts pie;
 
@@ -31,10 +36,11 @@ public class ChartsController extends SelectorComposer {
     }
 
     private void initPie() {
+        Client client = clientDAO.findByUsername((String) ((HttpSession)(Executions.getCurrent()).getDesktop().getSession().getNativeSession()).getAttribute("username"));
         Series series = pie.getSeries();
         series.setType("pie");
         series.setName("По категориям");
-        for (Map.Entry<String, Long> pair : itemDAO.countItemsByCategory().entrySet())
+        for (Map.Entry<String, Long> pair : itemDAO.countItemsByCategory(client).entrySet())
             series.addPoint(pair.getKey(), pair.getValue());
     }
 

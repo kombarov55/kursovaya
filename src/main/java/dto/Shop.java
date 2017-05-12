@@ -14,8 +14,8 @@ import static javax.persistence.GenerationType.AUTO;
 public class Shop {
 
     @Id @GeneratedValue(strategy = AUTO)
-    long id;
-    String name;
+    public long id;
+    public String name;
 
     public Shop() {
     }

@@ -2,7 +2,12 @@
     <window apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('web.ItemDumpVM')">
         <vbox>
             <hbox pack="center" width="100%">
-                <combobox placeholder="Категория.." selectedItem="@bind(vm.selectedCategory)" model="@load(vm.categories)" onChange="@command('notifyItemsAboutFilter')" />
+                <combobox placeholder="Категория.." selectedItem="@bind(vm.selectedCategory)" model="@init(vm.categories)" onChange="@command('notifyItemsAboutFilter')">
+                    <template name="model" var="category">
+                        <comboitem label="@init(category.name)">
+                        </comboitem>
+                    </template>
+                </combobox>
 				<textbox value="@bind(vm.selectedShopName)" placeholder="Продавец.." onChange="@command('notifyItemsAboutFilter')" />
             </hbox>
             <hbox pack="center" width="100%">
@@ -15,16 +20,23 @@
 
         <listbox model="@bind(vm.items)" height="100%" style="overflow-y: auto">
             <listhead>
-                <listheader hflex="10" label="Категория" sort="auto(category.name)" />
+                <listheader hflex="15" label="Категория" sort="auto(category.name)" />
                 <listheader hflex="11" label="Производитель" sort="auto(seller.name)" />
-                <listheader hflex="10" label="Цена ($)" sort="auto(price)" />
-                <listheader hflex="10" label="Дата покупки" sort="auto(purchaseDate)" />
+                <listheader hflex="7" label="Цена ($)" sort="auto(price)" />
+                <listheader hflex="7" label="Дата покупки" sort="auto(purchaseDate)" />
             </listhead>
             <template name="model" var="item">
                 <listitem>
-                    <listcell label="@load(item.category.name)" />
+                    <!--<listcell label="@load(item.category.name)" />-->
+                    <listcell>
+                        <combobox model="@init(vm.categories)" selectedItem="@bind(item.category)" onChange="@global-command('onCategoryChanged', item=item)">
+                            <template name="model" var="category">
+                                <comboitem label="@init(category.name)" width="100%" />
+                            </template>
+                        </combobox>
+                    </listcell>
                     <listcell label="@load(item.seller.name)" />
-                    <listcell label="@load(item.price) @converter('formatedNumber', format='###,### $')" />
+                    <listcell label="@load(item.price) @converter('formatedNumber', format='$###,###')" />
                     <listcell label="@load(item.purchaseDate) @converter('formatedDate', format='dd.MM.yyyy')" />
                 </listitem>
             </template>

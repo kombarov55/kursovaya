@@ -1,3 +1,4 @@
+import org.eclipse.jetty.security.JDBCLoginService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ public class Launcher {
         root.setParentLoaderPriority(true);
 
         server.setHandler(root);
+
+        JDBCLoginService loginService = new JDBCLoginService();
+        loginService.setConfig(webappDirLocation + "/WEB-INF/realm.properties");
+        server.addBean(loginService);
 
         server.start();
         server.join();

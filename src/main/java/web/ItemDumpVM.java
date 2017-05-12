@@ -2,21 +2,23 @@ package web;
 
 
 import db.CategoryDAO;
-import db.DataInitializer;
+import db.ClientDAO;
 import db.ItemDAO;
 import dto.Category;
+import dto.Client;
 import dto.Item;
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Created by nikolaykombarov on 21.03.17.
@@ -26,9 +28,12 @@ public class ItemDumpVM {
 
     @WireVariable ItemDAO itemDAO;
     @WireVariable CategoryDAO categoryDAO;
+    @WireVariable ClientDAO clientDAO;
 
 
     List<Category> categories;
+
+    Client client;
 
     Category selectedCategory;
     String selectedShopName;
@@ -40,6 +45,8 @@ public class ItemDumpVM {
     @AfterCompose
     public void loadData() {
         categories = categoryDAO.getAll();
+        String username = (String) ((HttpSession)(Executions.getCurrent()).getDesktop().getSession().getNativeSession()).getAttribute("username");
+        client = clientDAO.findByUsername(username);
     }
 
     @Command @NotifyChange("items")
@@ -47,7 +54,12 @@ public class ItemDumpVM {
     }
 
     public List<Item> getItems() {
-        return itemDAO.getByFilter(selectedCategory == null ? "" : selectedCategory.getName(), selectedShopName, beginPrice, endPrice, beginDate, endDate);
+        return itemDAO.getByFilter(selectedCategory == null ? "" : selectedCategory.getName(), selectedShopName, beginPrice, endPrice, beginDate, endDate, client);
+    }
+
+    @GlobalCommand
+    public void onCategoryChanged(@BindingParam("item") Item item) {
+        itemDAO.update(item);
     }
 
     public List<Category> getCategories() {

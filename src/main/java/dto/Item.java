@@ -23,17 +23,19 @@ public class Item {
 
     @ManyToOne(cascade = ALL) Category category = null;
     @ManyToOne(cascade = ALL) Shop seller = null;
+    @ManyToOne Client client;
     int price = 0;
     Date purchaseDate = new Date();
 
     public Item() {
     }
 
-    public Item(Category category, Shop seller, int price, Date purchaseDate) {
+    public Item(Category category, Shop seller, int price, Date purchaseDate, Client client) {
         this.category = category;
         this.seller = seller;
         this.price = price;
         this.purchaseDate = purchaseDate;
+        this.client = client;
     }
 
     public void setId(long id) {

@@ -7,15 +7,15 @@
         <north height="15%" zclass="borderless">
         </north>
         <west width="35%" autoscroll="true">
-            <include src="WEB-INF/zuls/itemDump.zul" />
+            <include src="/WEB-INF/zuls/itemDump.zul" />
         </west>
         <center style="border: 0; margin-left: 1px">
             <borderlayout>
                 <north height="70%" border="normal">
-                    <include src="WEB-INF/zuls/charts.zul" />
+                    <include src="/WEB-INF/zuls/charts.zul" />
                 </north>
                 <south height="30%" border="normal">
-                    <include src="WEB-INF/zuls/statystics.zul" />
+                    <include src="/WEB-INF/zuls/statystics.zul" />
                 </south>
             </borderlayout>
         </center>

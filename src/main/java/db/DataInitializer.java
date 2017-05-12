@@ -1,8 +1,10 @@
 package db;
 
 import dto.Category;
+import dto.Client;
 import dto.Item;
 import dto.Shop;
+import dto.UserRole;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.util.Calendar.DAY_OF_YEAR;
 
@@ -23,12 +26,37 @@ import static java.util.Calendar.DAY_OF_YEAR;
 public class DataInitializer implements InitializingBean {
 
     @Autowired ItemDAO itemDAO;
+    @Autowired ClientDAO clientDAO;
+    @Autowired UserRoleDAO userRoleDAO;
+    @Autowired CategoryDAO categoryDAO;
+
+    Client client;
 
     static Random r = new Random();
 
     @Override public void afterPropertiesSet() throws Exception {
-        if (itemDAO.getAll().size() == 0)
+        if (itemDAO.countAll() == 0) {
+            generateAndSaveClient();
+            clientDAO.save(client);
+            saveAllShops();
+            saveAllCategories();
             itemDAO.saveAll(generateItemList(r.nextInt(1000)));
+        }
+    }
+
+    private void generateAndSaveClient() {
+        Client client = new Client("admin@mail.ru", "password", userRoleDAO.getByName("user"));
+    }
+
+    private void saveAllShops() {
+        List<Shop> shops = new ArrayList<>();
+        for (CategoryEnumeration each : CategoryEnumeration.values()) {
+            shops.addAll(each.shops);
+        }
+    }
+
+    private void saveAllCategories() {
+        categoryDAO.addAll(Arrays.stream(CategoryEnumeration.values()).map(each -> each.category).collect(Collectors.toList()));
     }
 
     private List<Item> generateItemList(int amount) {
@@ -42,7 +70,7 @@ public class DataInitializer implements InitializingBean {
         CategoryEnumeration enumElement = CategoryEnumeration.getPseudoRandomElement();
         Category category = enumElement.category;
         Shop shop = enumElement.getRandomShop();
-        return new Item(null, shop, generatePrice(15, 600), generateTimeAgo(3, 365));
+        return new Item(null, shop, generatePrice(15, 600), generateTimeAgo(3, 365), client);
     }
 
     private int generatePrice(int base, int maxRandom) {
@@ -64,8 +92,8 @@ public class DataInitializer implements InitializingBean {
         HEALTHCARE("Здоровье", 2, "Больница г. Москвы", "Аптека 36.6", "Доктор Столетов"),
         SPORT("Спорт", 2, "Физика", "we-gym", "Фок");
 
-        Category category;
-        List<Shop> shops = new ArrayList<>();
+        public Category category;
+        public List<Shop> shops = new ArrayList<>();
         int weight;
 
         static Random random = new Random();

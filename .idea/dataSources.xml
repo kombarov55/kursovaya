@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/bankassistance</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="kursovaya@localhost" uuid="3c084e92-9836-4cfc-b2af-99e38464b509">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/kursovaya</jdbc-url>
+    </data-source>
   </component>
 </project>
