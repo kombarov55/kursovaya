@@ -1,9 +1,7 @@
 package web;
 
-import db.CategoryDAO;
 import db.ClientDAO;
 import db.ItemDAO;
-import dto.Category;
 import dto.Client;
 import org.zkoss.chart.Charts;
 import org.zkoss.chart.Series;
@@ -15,7 +13,6 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

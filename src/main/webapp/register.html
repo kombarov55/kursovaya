@@ -1,10 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+
+        * {
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        table {
+            border: 1px solid black;
+            margin: auto;
+            margin-top: 250px;
+            width: 200px;
+        }
+
+        input {
+            width: 100%;
+            text-align: left;
+        }
+
+        #submit {
+            text-align: center;
+        }
+
+        #failMessage {
+            color: red;
+        }
+
+    </style>
     <meta charset="UTF-8">
     <title>Зарегистрироваться</title>
 </head>
-<body>
+<form method="POST" action="/register.do">
+    <table>
+        <th>
+            Регистрация
+        </th>
+        <tr>
+            <td><input placeholder="Электронная почта.." size="12" value="" name="username"></td>
+        </tr>
+        <tr>
+            <td><input placeholder="Пароль.." name="password" type="password"></td>
+        </tr>
+        <tr>
+            <td><input placeholder="Повторите пароль.." name="password-repeat" type="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input id="submit" value="Зарегистрироваться" name="submit" type="submit" value="Login">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="/login.html">Назад</a>
+            </td>
+        </tr>
+    </table>
+</form>
 
-</body>
+<span id="failMessage">Неправильные данные, введите ещё раз</span>
+
+<script>
+    let url = window.location.href
+    let failedParam = url.split("fail=")[1]
+    if (failedParam == undefined || failedParam != "true") {
+        document.getElementById("failMessage").style.visibility = "hidden";
+    }
+</script>
 </html>

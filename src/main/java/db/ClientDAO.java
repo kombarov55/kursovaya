@@ -69,23 +69,6 @@ public class ClientDAO {
         }
     }
 
-    public boolean areCredentialsValid(String username, String password) {
-        String sql = "SELECT count (*) FROM client WHERE username LIKE ? AND password LIKE ?";
-        boolean userFound = false;
-        try (Connection con = ds.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            userFound = rs.getInt(1) != 0;
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-            System.out.println(ignored.getMessage());
-        }
-        return userFound;
-    }
-
     public void save(Client testClient) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();

@@ -1,27 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+
+        * {
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        table {
+            border: 1px solid black;
+            margin: auto;
+            margin-top: 250px;
+            width: 200px;
+        }
+
+        input {
+            width: 100%;
+            text-align: left;
+        }
+
+        #submit {
+            text-align: center;
+        }
+
+        #failMessage {
+            color: red;
+        }
+
+    </style>
     <meta charset="UTF-8">
     <title>Войти</title>
 </head>
-<HTML>
-<H1>FORM Authentication demo</H1>
 <form method="POST" action="j_security_check">
     <table border="0" cellspacing="2" cellpadding="1">
+        <th>
+            Вход
+        </th>
         <tr>
-            <td>Username:</td>
-            <td><input size="12" value="" name="j_username" maxlength="25" type="text"></td>
+            <td><input placeholder="Электронная почта.." size="12" value="" name="j_username" maxlength="25"
+                       type="text"></td>
         </tr>
         <tr>
-            <td>Password:</td>
-            <td><input size="12" value="" name="j_password" maxlength="25" type="password"></td>
+            <td><input placeholder="Пароль.." size="12" value="" name="j_password" maxlength="25" type="password"></td>
         </tr>
         <tr>
             <td colspan="2" align="center">
-                <input name="submit" type="submit" value="Login">
+                <input id="submit" value="Войти" name="submit" type="submit" value="Login">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="/register.html">Зарегистрироваться</a>
             </td>
         </tr>
     </table>
+    <span id="failMessage">Неправильные данные, введите ещё раз</span>
 </form>
-</HTML>
+
+<script>
+    let url = window.location.href
+    let failedParam = url.split("fail=")[1]
+    if (failedParam == undefined || failedParam != "true") {
+        document.getElementById("failMessage").style.visibility = "hidden";
+    }
+</script>
+
 </html>

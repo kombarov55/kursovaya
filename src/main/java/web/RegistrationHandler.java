@@ -31,7 +31,7 @@ public class RegistrationHandler implements HttpRequestHandler {
     }
 
     private boolean isValid(String username, String password, String passwordRepeat) throws ServletException, IOException {
-        return username.contains("@") && password.equals(passwordRepeat);
+        return username.contains("@") && usernameUnique(username) && password.equals(passwordRepeat);
     }
 
     private void doSuccessRedirect(HttpServletResponse response) throws ServletException, IOException {
@@ -40,6 +40,10 @@ public class RegistrationHandler implements HttpRequestHandler {
 
     private void doFailRedirect(HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect("/register.html?fail=true");
+    }
+
+    private boolean usernameUnique(String username) {
+        return clientDAO.findByUsername(username) == null;
     }
 
 }

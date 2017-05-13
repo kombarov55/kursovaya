@@ -72,11 +72,11 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>registerServlet</servlet-name>
+        <servlet-name>registrationHandler</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>registerServlet</servlet-name>
+        <servlet-name>registrationHandler</servlet-name>
         <url-pattern>/register.do</url-pattern>
     </servlet-mapping>
     <servlet>
