@@ -50,8 +50,7 @@ public class ItemDAO extends HibernateDaoSupport {
     }
 
 
-    @Transactional
-    public int countAll() {
+    @Transactional public int countAll() {
         String sql = "SELECT count(*) FROM item";
         int ret = 1;
         try (Connection con = dataSource.getConnection();
@@ -66,8 +65,7 @@ public class ItemDAO extends HibernateDaoSupport {
         return ret;
     }
 
-    @Transactional
-    public List<Item> getByFilter(String categoryName, String shopName, Integer beginPrice, Integer endPrice, Date from, Date to, Client client) {
+    @Transactional public List<Item> getByFilter(String categoryName, String shopName, Integer beginPrice, Integer endPrice, Date from, Date to, Client client) {
         List<Item> ret = new ArrayList<>();
         String sql = "SELECT i.price, i.purchasedate, c.id, s.id " +
                 "FROM item i " +

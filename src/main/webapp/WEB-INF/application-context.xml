@@ -15,7 +15,7 @@
         <property name="driverClassName" value="org.postgresql.Driver" />
         <property name="username" value="postgres" />
         <property name="password" value="root" />
-        <property name="url" value="jdbc:postgresql://localhost:5432/kursovaya" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/bankdb" />
     </bean>
 
     <bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
@@ -50,5 +50,11 @@
     </bean>
 
     <bean id="registrationHandler" class="web.RegistrationHandler" />
+    <bean id="emailSender" class="util.EmailSender">
+        <constructor-arg index="0" value="kombarov55@gmail.com" />
+        <constructor-arg index="1" value="Cab11451246" />
+    </bean>
+
+    <bean name="chartsNotifier" class="util.ChartsNotifier" />
 
 </beans>

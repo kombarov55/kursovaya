@@ -37,7 +37,6 @@ public class DataInitializer implements InitializingBean {
     @Override public void afterPropertiesSet() throws Exception {
         if (itemDAO.countAll() == 0) {
             generateAndSaveClient();
-            clientDAO.save(client);
             saveAllShops();
             saveAllCategories();
             itemDAO.saveAll(generateItemList(r.nextInt(1000)));
@@ -46,6 +45,7 @@ public class DataInitializer implements InitializingBean {
 
     private void generateAndSaveClient() {
         Client client = new Client("admin@mail.ru", "password", userRoleDAO.getByName("user"));
+        clientDAO.save(client);
     }
 
     private void saveAllShops() {

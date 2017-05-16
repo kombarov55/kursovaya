@@ -2,6 +2,7 @@ package db;
 
 
 import dto.UserRole;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,18 +11,21 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Optional;
 
 public class UserRoleDAO extends HibernateDaoSupport {
 
     @Autowired DataSource ds;
 
     @Transactional public void save(UserRole userRole) {
-        getHibernateTemplate().save(userRole);
+        try (Session session = getHibernateTemplate().getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.save(userRole);
+            session.getTransaction().commit();
+        }
     }
 
     @Transactional public UserRole getById(long roleId) {
-        String sql = "select role from userrole where id = ?";
+        String sql = "SELECT role FROM userrole WHERE id = ?";
         UserRole ret = null;
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -47,7 +51,7 @@ public class UserRoleDAO extends HibernateDaoSupport {
     }
 
     private UserRole findInDb(String roleName) {
-        String sql = "select role from userrole where role like ?";
+        String sql = "SELECT role FROM userrole WHERE role LIKE ?";
         UserRole ret = null;
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

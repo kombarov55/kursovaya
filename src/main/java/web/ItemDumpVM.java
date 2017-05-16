@@ -15,6 +15,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import util.ChartsNotifier;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -29,6 +30,7 @@ public class ItemDumpVM {
     @WireVariable ItemDAO itemDAO;
     @WireVariable CategoryDAO categoryDAO;
     @WireVariable ClientDAO clientDAO;
+    @WireVariable ChartsNotifier chartsNotifier;
 
 
     List<Category> categories;
@@ -60,6 +62,7 @@ public class ItemDumpVM {
     @GlobalCommand
     public void onCategoryChanged(@BindingParam("item") Item item) {
         itemDAO.update(item);
+        chartsNotifier.notifyChange(item);
     }
 
     public List<Category> getCategories() {

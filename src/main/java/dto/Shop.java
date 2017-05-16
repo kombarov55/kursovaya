@@ -20,6 +20,11 @@ public class Shop {
     public Shop() {
     }
 
+    public Shop(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Shop(String name) {
         this.name = name;
     }

@@ -4,6 +4,7 @@ import dto.Client;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -69,7 +70,7 @@ public class ClientDAO {
         }
     }
 
-    public void save(Client testClient) {
+    @Transactional public void save(Client testClient) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.save(testClient);

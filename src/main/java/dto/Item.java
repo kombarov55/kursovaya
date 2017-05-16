@@ -19,13 +19,13 @@ import static javax.persistence.GenerationType.AUTO;
 public class Item {
 
     @Id @GeneratedValue(strategy = AUTO)
-    long id = 0;
+    public long id = 0;
 
-    @ManyToOne(cascade = ALL) Category category = null;
-    @ManyToOne(cascade = ALL) Shop seller = null;
-    @ManyToOne Client client;
-    int price = 0;
-    Date purchaseDate = new Date();
+    @ManyToOne(cascade = ALL) public Category category = null;
+    @ManyToOne(cascade = ALL) public Shop seller = null;
+    @ManyToOne public Client client;
+    public int price = 0;
+    public Date purchaseDate = new Date();
 
     public Item() {
     }
